@@ -37,3 +37,30 @@ body {
     background: var(--background);
     font-family: "Pretendard";
 }
+
+/* 페이지네이션 기본 스타일 */
+.swiper-pagination {
+    position: absolute;
+    bottom: 80px; /* ✅ 버튼 위로 배치 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✅ 기본 점 색상 (회색) */
+.swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: #c4c4c4 !important; /* 기본 점 색상 */
+    opacity: 1;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+/* ✅ 활성화된 점 스타일 (초록색 + 길쭉한 타원형) */
+.swiper-pagination-bullet-active {
+    width: 20px !important; /* ✅ 선택된 점 길게 */
+    height: 8px !important;
+    background: #15b493 !important; /* ✅ 초록색으로 변경 */
+    border-radius: 10px;
+}
