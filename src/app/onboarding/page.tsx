@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const slides = [
     {
@@ -45,6 +46,13 @@ const Page = () => {
 
     return (
         <div className="h-screen flex flex-col justify-between items-center bg-white relative">
+            {activeIndex > 0 && (
+                <IoMdArrowRoundBack
+                    onClick={() => swiperRef.current?.slidePrev()} // ✅ 이전 슬라이드로 이동
+                    className="absolute top-10 left-5 text-xl cursor-pointer"
+                />
+            )}
+
             {/* ✅ Swiper 슬라이드 */}
             <Swiper
                 modules={[Pagination]}
@@ -76,28 +84,28 @@ const Page = () => {
                             ))}
                         </p>
 
-                        {/* ✅ 이미지 (여백 추가: mb-10) */}
+                        {/* ✅ 이미지 (여백 추가: mb-12) */}
                         <Image
                             src={slide.image}
-                            alt={slide.title.join(" ")} // ✅ alt 문자열 변환
+                            alt={slide.title.join(" ")}
                             width={238}
                             height={238}
-                            className="mt-12 mx-auto mb-10" // ✅ 이미지와 페이지네이션 사이 간격 증가
+                            className="mt-12 mx-auto mb-12"
                         />
 
-                        {/* ✅ 페이지네이션 (아래로 더 내리기: bottom-12 → bottom-6) */}
-                        <div className="swiper-pagination absolute bottom-6 flex justify-center"></div>
+                        {/* ✅ 페이지네이션 (버튼과 간격 확보) */}
+                        <div className="swiper-pagination absolute bottom-24 flex justify-center"></div>
                     </SwiperSlide>
                 ))}
             </Swiper>
 
             {/* ✅ 버튼을 Swiper 바깥에 배치 (하단 고정) */}
-            <div className="w-full max-w-md px-6 absolute bottom-20">
+            <div className="w-full max-w-md px-6 absolute bottom-10">
                 {activeIndex + 1 === slides.length ? (
                     <Link
-                        href="/home"
+                        href="/login"
                         className="w-full h-14 bg-[#15B493] text-white text-lg font-semibold flex items-center justify-center rounded-lg 
-                        transition-all duration-300 hover:bg-[#128A70]"
+                        transition-all duration-300 hover:bg-[#128A70] active:bg-[#0F6D59]"
                     >
                         {slides[activeIndex].buttonText}
                     </Link>
@@ -105,7 +113,7 @@ const Page = () => {
                     <button
                         onClick={() => swiperRef.current?.slideNext()}
                         className="w-full h-14 bg-[#15B493] text-white text-lg font-semibold flex items-center justify-center rounded-lg 
-                        transition-all duration-300 hover:bg-[#128A70]"
+                        transition-all duration-300 hover:bg-[#128A70] active:bg-[#0F6D59]"
                     >
                         {slides[activeIndex].buttonText}
                     </button>
