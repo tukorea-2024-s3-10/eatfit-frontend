@@ -91,6 +91,8 @@ const Page = () => {
                             width={238}
                             height={238}
                             className="mt-12 mx-auto mb-12"
+                            priority={index === 0}
+                            loading={index === 0 ? "eager" : "lazy"}
                         />
 
                         {/* ✅ 페이지네이션 (버튼과 간격 확보) */}
