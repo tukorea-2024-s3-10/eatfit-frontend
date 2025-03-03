@@ -9,7 +9,7 @@ const Page = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             router.replace("/onboarding");
-        }, 3000);
+        }, 2500);
 
         return () => clearTimeout(timer);
     }, []);
