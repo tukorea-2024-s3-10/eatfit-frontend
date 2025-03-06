@@ -12,7 +12,7 @@ const Page = () => {
         }, 2500);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, [router]);
 
     return (
         <div className="flex items-center justify-center h-screen bg-white">
