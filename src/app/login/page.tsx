@@ -1,7 +1,19 @@
 "use client";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+
 const page = () => {
+    // 네이버 로그인 요청
+    const handleNaverLogin = () => {
+        window.location.href =
+            "http://localhost:8080/oauth2/authorization/naver";
+    };
+
+    // 카카오 로그인 요청
+    const handleKakaoLogin = () => {
+        window.location.href =
+            "http://localhost:8080/oauth2/authorization/kakao";
+    };
+
     return (
         <div className="h-screen flex justify-center items-center flex-col bg-white px-6">
             <h2 className="text-lg font-semibold">로그인</h2>
@@ -23,10 +35,10 @@ const page = () => {
                 className="mt-8"
             ></Image>
 
-            {/* 카카오&네이버 로그인 */}
+            {/* 카카오&네이버 로그인 버튼 */}
             <button
-                onClick={() => signIn("kakao")}
-                className="flex justify-center items-center mt-10  w-full max-w-md  border-2 border-[#9BE8D8]  text-black font-medium h-16 rounded-2xl mx-11 transition-all duration-300 hover:bg-[#FFE812] hover:opacity-90"
+                onClick={handleKakaoLogin}
+                className="flex justify-center items-center mt-10 w-full max-w-md border-2 border-[#9BE8D8] text-black font-medium h-16 rounded-2xl mx-11 transition-all duration-300 hover:bg-[#FFE812] hover:opacity-90"
             >
                 <Image
                     src={"/login_kakao.svg"}
@@ -38,8 +50,8 @@ const page = () => {
                 카카오 로그인
             </button>
             <button
-                onClick={() => signIn("naver")}
-                className="flex justify-center items-center w-full max-w-md border-2 border-[#9BE8D8]  text-black font-medium h-16 rounded-2xl mx-11 mt-4 transition-all duration-300 hover:bg-[#34A853] hover:text-white hover:opacity-90"
+                onClick={handleNaverLogin}
+                className="flex justify-center items-center w-full max-w-md border-2 border-[#9BE8D8] text-black font-medium h-16 rounded-2xl mx-11 mt-4 transition-all duration-300 hover:bg-[#34A853] hover:text-white hover:opacity-90"
             >
                 <Image
                     src={"/login_naver.svg"}
@@ -47,6 +59,7 @@ const page = () => {
                     width={24}
                     height={24}
                     className="mr-2"
+                    priority={true}
                 />
                 네이버 로그인
             </button>
