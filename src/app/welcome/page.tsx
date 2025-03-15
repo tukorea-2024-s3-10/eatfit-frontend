@@ -1,5 +1,5 @@
 "use client";
-import BigLogo from "../components/LoginButton.tsx/BigLogo";
+import BigLogo from "../components/LoginButton/BigLogo";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
