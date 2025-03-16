@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 const ImageUploader = () => {
-    const [preview, setPreview] = useState("/test-profile.svg");
+    const [preview, setPreview] = useState("/default-profile.svg");
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
