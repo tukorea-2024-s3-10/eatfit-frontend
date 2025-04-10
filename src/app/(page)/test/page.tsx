@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import ImageUploader from "../components/ImageUploader/ImageUploader";
-import NickNameInputField from "../components/InputField/NickNameInputField";
+import ImageUploader from "../../components/common/ImageUploader/ImageUploader";
+import NickNameInputField from "../../components/common/InputField/NickNameInputField";
 import { useState } from "react";
 
 const Page = () => {

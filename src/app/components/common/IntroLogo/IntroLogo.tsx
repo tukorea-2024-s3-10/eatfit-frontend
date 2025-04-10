@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
-const BigLogo = () => {
+const IntroLogo = () => {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.8 }} // 시작 애니메이션 (투명하고 작게)
@@ -36,4 +36,4 @@ const BigLogo = () => {
     );
 };
 
-export default BigLogo;
+export default IntroLogo;
