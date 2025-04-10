@@ -27,7 +27,7 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "src/app/components/LoginButton"
+        "src/app/components/common/IntroLogo"
     ],
     "exclude": ["node_modules"]
 }

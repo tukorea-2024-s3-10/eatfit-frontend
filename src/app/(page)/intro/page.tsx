@@ -1,5 +1,5 @@
 "use client";
-import BigLogo from "../components/LoginButton/BigLogo";
+import IntroLogo from "@/app/components/common/IntroLogo/IntroLogo";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ const Page = () => {
     return (
         <div className="flex items-center justify-center h-screen bg-white">
             <div className="-translate-y-8">
-                <BigLogo />
+                <IntroLogo />
             </div>
         </div>
     );

@@ -35,7 +35,7 @@
 body {
     color: var(--foreground);
     background: var(--background);
-    font-family: "Pretendard";
+    font-family: "Pretendard", sans-serif;
 }
 
 /* 페이지네이션 기본 스타일 */
