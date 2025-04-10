@@ -27,8 +27,7 @@ const Page = () => {
         !!age.trim() &&
         !!height.trim() &&
         !!weight.trim() &&
-        !!purpose &&
-        diseases.length > 0;
+        !!purpose;
 
     return (
         console.log({

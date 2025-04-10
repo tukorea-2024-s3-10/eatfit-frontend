@@ -35,7 +35,7 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <EmotionRegistry>
-                    <div className="w-[360px] mx-auto min-h-screen bg-white">
+                    <div className="w-full max-w-[480px] mx-auto min-h-screen bg-white">
                         {children}
                     </div>
                 </EmotionRegistry>
