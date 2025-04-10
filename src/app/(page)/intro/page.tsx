@@ -1,5 +1,5 @@
 "use client";
-import IntroLogo from "@/app/components/common/IntroLogo/IntroLogo";
+import IntroLogo from "@/app/components/common/IntroLogo";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
