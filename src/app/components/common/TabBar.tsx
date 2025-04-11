@@ -18,7 +18,7 @@ const TabBar = () => {
             icon: <UtensilsCrossed size={20} />,
             path: "/history/meal",
         },
-        { label: "체중", icon: <IoScale size={20} />, path: "/history/weight" },
+        { label: "체중", icon: <IoScale size={20} />, path: "/record/weight" },
         { label: "마이", icon: <User size={20} />, path: "/mypage" },
     ];
 

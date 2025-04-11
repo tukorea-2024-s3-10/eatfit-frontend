@@ -7,7 +7,7 @@ const NutritionPlan_GoToManageButton = () => {
     const router = useRouter();
 
     const handleClick = () => {
-        router.push("/manage"); // 🔗 페이지 이동
+        router.push("/dashboard"); // 🔗 페이지 이동
     };
 
     return (
