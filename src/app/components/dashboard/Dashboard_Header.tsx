@@ -26,7 +26,7 @@ const Dashboard_Header = () => {
     const menuItems = [
         { label: "홈", path: "/dashboard" },
         { label: "식단 기록하기", path: "/record/meal" },
-        { label: "체중 기록하기", path: "/record/weight" }, // 구현현
+        { label: "체중 기록하기", path: "/record/weight" }, //
         { label: "식단 기록", path: "/history/meal" },
         { label: "체중 기록", path: "/history/weight" },
         { label: "건강 리포트", path: "/report" },

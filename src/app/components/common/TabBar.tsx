@@ -39,7 +39,10 @@ const TabBar = () => {
             }}
         >
             {tabs.map(tab => {
-                const isActive = pathname === tab.path;
+                const isActive =
+                    tab.path === "/mypage"
+                        ? pathname.startsWith("/mypage")
+                        : pathname === tab.path;
                 return (
                     <Box
                         key={tab.path}
