@@ -1,16 +1,15 @@
-// components/dashboard/Dashboard_Header.tsx
 "use client";
 
-import Image from "next/image";
-import { Box, IconButton, Menu, MenuItem } from "@mui/material";
-import { Menu as MenuIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { IconButton, Menu, MenuItem, Box, Typography } from "@mui/material";
+import { Menu as MenuIcon, ArrowLeft } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
-const Dashboard_Header = () => {
+const WeightRecord_Header = () => {
     const router = useRouter();
+    const pathname = usePathname();
+    const isWeightRecordRoot = pathname === "/record/weight";
 
-    // 메뉴 열림 상태 및 위치 추적
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -22,7 +21,11 @@ const Dashboard_Header = () => {
         setAnchorEl(null);
     };
 
-    // 메뉴 항목
+    const handleNavigate = (path: string) => {
+        router.push(path);
+        handleMenuClose();
+    };
+
     const menuItems = [
         { label: "홈", path: "/dashboard" },
         { label: "식단 기록하기", path: "/record/meal" },
@@ -35,28 +38,32 @@ const Dashboard_Header = () => {
         { label: "마이페이지", path: "/mypage" },
     ];
 
-    const handleNavigate = (path: string) => {
-        router.push(path);
-        handleMenuClose();
-    };
-
     return (
         <header className="w-full flex justify-between items-center px-4 pt-4 pb-2">
-            {/* 로고 */}
-            <Box
-                onClick={() => router.push("/dashboard")}
-                sx={{ display: "flex", alignItems: "center" }}
-            >
-                <Image
-                    src="/Dashboard_Logo.svg"
-                    alt="Eat Fit 로고"
-                    width={110}
-                    height={40}
-                    priority
-                />
-            </Box>
+            {/* 왼쪽: 뒤로가기 or 빈공간 */}
+            {isWeightRecordRoot ? (
+                <IconButton
+                    sx={{ padding: 0, color: "#2F3033" }}
+                    onClick={() => router.back()}
+                >
+                    <ArrowLeft size={24} />
+                </IconButton>
+            ) : (
+                <Box sx={{ width: 24 }} />
+            )}
 
-            {/* 햄버거 버튼 */}
+            {/* 중앙: 제목 */}
+            <Typography
+                sx={{
+                    fontWeight: 500,
+                    fontSize: "16px",
+                    color: "#2F3033",
+                }}
+            >
+                체중 기록하기
+            </Typography>
+
+            {/* 오른쪽: 햄버거 */}
             <IconButton
                 sx={{
                     padding: 0,
@@ -66,7 +73,8 @@ const Dashboard_Header = () => {
             >
                 <MenuIcon size={28} />
             </IconButton>
-            {/* 드롭다운 메뉴 */}
+
+            {/* 메뉴 */}
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -79,8 +87,8 @@ const Dashboard_Header = () => {
                     vertical: "top",
                     horizontal: "right",
                 }}
-                transitionDuration={200} // 🔹 반응 속도 빠르게
-                disableScrollLock // 🔹 모바일 스크롤 이슈 방지
+                transitionDuration={200}
+                disableScrollLock
             >
                 {menuItems.map(item => (
                     <MenuItem
@@ -90,7 +98,7 @@ const Dashboard_Header = () => {
                             fontSize: 14,
                             "&:hover": {
                                 backgroundColor: "#F5F5FD",
-                                color: "#7C69EF", // 🔹 강조 색상
+                                color: "#7C69EF",
                             },
                         }}
                     >
@@ -102,4 +110,4 @@ const Dashboard_Header = () => {
     );
 };
 
-export default Dashboard_Header;
+export default WeightRecord_Header;
