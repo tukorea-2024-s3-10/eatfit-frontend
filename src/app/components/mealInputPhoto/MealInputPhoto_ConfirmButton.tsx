@@ -9,7 +9,7 @@ const MealInputPhoto_ConfirmButton = () => {
 
     const handleClick = () => {
         // ✅ 홈으로 이동
-        router.push("/dashboard");
+        router.push("/record/meal/loading");
     };
 
     return (

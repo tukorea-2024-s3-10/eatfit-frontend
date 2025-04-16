@@ -38,7 +38,7 @@ const MealInputName_ConfirmButton = () => {
         console.log("🍽️ 저장된 총 섭취량:", total);
 
         // ✅ 페이지 이동 (예: 대시보드 또는 리포트)
-        router.push("/dashboard");
+        router.push("/record/meal/loading");
     };
 
     return (

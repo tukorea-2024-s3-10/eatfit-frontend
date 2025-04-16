@@ -46,7 +46,7 @@ const MealInputManual_ConfirmButton = () => {
         console.log("✅ 저장 완료!", manualInput);
 
         // ✅ 다음 페이지 이동
-        router.push("/dashboard");
+        router.push("/record/meal/loading");
     };
 
     return (
