@@ -6,13 +6,20 @@ import { useRouter } from "next/navigation";
 interface ProfileSetupSubmitProps {
     isValid: boolean;
     onSubmit: () => void;
+    buttonText?: string;
+    redirectTo?: string;
 }
 
-const ProfileSetupSubmit = ({ isValid, onSubmit }: ProfileSetupSubmitProps) => {
+const ProfileSetupSubmit = ({
+    isValid,
+    onSubmit,
+    buttonText,
+    redirectTo,
+}: ProfileSetupSubmitProps) => {
     const router = useRouter();
     const handleSubmit = () => {
         onSubmit?.(); // ?. 존재한다면 뒤를 실행()
-        router.push("/profile/nutritionPlan");
+        router.push(redirectTo || "/profile/nutritionPlan");
     };
     return (
         <div className="w-full flex justify-center py-6">
@@ -35,7 +42,7 @@ const ProfileSetupSubmit = ({ isValid, onSubmit }: ProfileSetupSubmitProps) => {
                     },
                 }}
             >
-                설정하기
+                {buttonText ?? "설정하기"}
             </Button>
         </div>
     );

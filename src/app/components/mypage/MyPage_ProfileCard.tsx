@@ -2,9 +2,12 @@
 
 import { Box, Typography, Avatar } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
 
 const MyPage_ProfileCard = () => {
+    const router = useRouter();
+
     // 상태에서 유저 정보 불러오기 🎯
     const nickname = useProfileSetupStore(state => state.nickname);
     const age = useProfileSetupStore(state => state.age);
@@ -20,7 +23,7 @@ const MyPage_ProfileCard = () => {
         유지: "/perpose_normal.svg",
     };
 
-    const profileImage = "/sample-profile.jpg"; // 기본 이미지 (나중에 상태로 바꿔도 OK)
+    const profileImage = "/sample-profile.jpg"; // 기본 이미지
     const purposeImage = purpose
         ? purposeImageMap[purpose]
         : "/perpose_normal.svg";
@@ -74,6 +77,19 @@ const MyPage_ProfileCard = () => {
                         {diseases.length > 0 ? diseases.join(" ") : "없음"}
                     </Typography>
                 </Box>
+            </Box>
+
+            {/* 🔧 정보 수정하기 버튼 */}
+            <Box mt={1.5} textAlign="right">
+                <Typography
+                    fontSize={12}
+                    fontWeight={400}
+                    color="#2F3033"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => router.push("/profile/edit")}
+                >
+                    정보 수정하기 &gt;
+                </Typography>
             </Box>
         </Box>
     );
