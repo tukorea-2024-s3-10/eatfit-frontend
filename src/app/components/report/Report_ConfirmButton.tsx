@@ -3,17 +3,18 @@
 import { Box, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-const HistoryMeal_ConfirmButton = () => {
+const Report_ConfirmButton = () => {
     const router = useRouter();
 
     const handleConfirm = () => {
-        router.push("/report"); // ✅ 오타 주의!
+        router.push("/recomand/dinner"); // ✅ 오타 주의!
     };
 
     return (
         <Box
             sx={{
                 px: 2,
+
                 pb: 6,
                 display: "flex",
                 justifyContent: "center",
@@ -35,10 +36,10 @@ const HistoryMeal_ConfirmButton = () => {
                     },
                 }}
             >
-                건강 리포트 보기
+                저녁 추천 받기
             </Button>
         </Box>
     );
 };
 
-export default HistoryMeal_ConfirmButton;
+export default Report_ConfirmButton;
