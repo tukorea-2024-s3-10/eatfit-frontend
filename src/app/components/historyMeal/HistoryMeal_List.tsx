@@ -1,36 +1,47 @@
+// components/historyMeal/HistoryMeal_List.tsx
 "use client";
 
-import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
-import HistoryMeal_HistoryCard from "./HistoryMeal_HistoryCard";
-
-interface MealEntry {
-    date: string;
-    meals: { time: string; totalKcal: number }[];
-}
+import { Box, Typography } from "@mui/material";
+import { useMealHistoryStore } from "@/app/store/useMealHistoryStore";
+import HistoryMeal_Card from "./HistoryMeal_Card";
 
 const HistoryMeal_List = () => {
-    const [data, setData] = useState<MealEntry[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await fetch("/api/mock/history-meal");
-            const json = await res.json();
-            setData(json.history);
-        };
-
-        fetchData();
-    }, []);
-
+    const { historyList, selectedDate } = useMealHistoryStore();
+    console.log("📅 현재 선택된 날짜:", selectedDate);
+    const todayData = historyList.find(item => item.date === selectedDate);
+    console.log("🔍 찾은 데이터:", todayData);
     return (
         <Box sx={{ px: 2, pt: 2 }}>
-            {data.map(entry => (
-                <HistoryMeal_HistoryCard
-                    key={entry.date}
-                    date={entry.date}
-                    meals={entry.meals}
-                />
-            ))}
+            {todayData?.meals?.length ? (
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, 1fr)",
+                        gap: 2,
+                    }}
+                >
+                    {todayData.meals.map(meal => (
+                        <HistoryMeal_Card
+                            key={meal.time}
+                            time={meal.time}
+                            kcal={meal.foods.reduce(
+                                (sum, food) => sum + food.calorie,
+                                0
+                            )}
+                        />
+                    ))}
+                </Box>
+            ) : (
+                <Typography
+                    textAlign="center"
+                    color="#909094"
+                    fontSize={14}
+                    fontWeight={500}
+                    mt={4}
+                >
+                    등록된 식단 기록이 없습니다.
+                </Typography>
+            )}
         </Box>
     );
 };

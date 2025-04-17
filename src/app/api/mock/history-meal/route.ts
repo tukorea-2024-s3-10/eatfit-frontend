@@ -3,23 +3,1169 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const mockData = [
         {
-            date: "2025-04-14",
+            date: "2025-04-01",
             meals: [
-                { time: "아침", totalKcal: 320 },
-                { time: "점심", totalKcal: 610 },
-                { time: "간식", totalKcal: 180 },
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "구운 계란",
+                            weight: "50g",
+                            calorie: 65,
+                            carbs: 2,
+                            protein: 6,
+                            fat: 3.9,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "순두부찌개",
+                            weight: "300g",
+                            calorie: 320,
+                            carbs: 15,
+                            protein: 20,
+                            fat: 20,
+                        },
+                        {
+                            name: "공기밥",
+                            weight: "210g",
+                            calorie: 262,
+                            carbs: 60,
+                            protein: 6,
+                            fat: 0.9,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "아이스티",
+                            weight: "240ml",
+                            calorie: 150,
+                            carbs: 39,
+                            protein: 0,
+                            fat: 0,
+                        },
+                        {
+                            name: "촉촉한 초코칩 2개",
+                            weight: "60g",
+                            calorie: 204,
+                            carbs: 22,
+                            protein: 2,
+                            fat: 12,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-02",
+            meals: [
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "잡곡밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                        {
+                            name: "닭가슴살",
+                            weight: "150g",
+                            calorie: 200,
+                            carbs: 1,
+                            protein: 35,
+                            fat: 2,
+                        },
+                        {
+                            name: "된장국",
+                            weight: "150g",
+                            calorie: 100,
+                            carbs: 7,
+                            protein: 6,
+                            fat: 4,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "비빔국수",
+                            weight: "250g",
+                            calorie: 490,
+                            carbs: 75,
+                            protein: 10,
+                            fat: 8,
+                        },
+                        {
+                            name: "계란찜",
+                            weight: "100g",
+                            calorie: 120,
+                            carbs: 3,
+                            protein: 7,
+                            fat: 9,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-03",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "식빵 2조각",
+                            weight: "60g",
+                            calorie: 150,
+                            carbs: 28,
+                            protein: 4,
+                            fat: 1,
+                        },
+                        {
+                            name: "딸기잼",
+                            weight: "20g",
+                            calorie: 50,
+                            carbs: 13,
+                            protein: 0,
+                            fat: 0,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "소고기 미역국",
+                            weight: "200g",
+                            calorie: 160,
+                            carbs: 4,
+                            protein: 12,
+                            fat: 9,
+                        },
+                        {
+                            name: "잡곡밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "김치볶음밥",
+                            weight: "300g",
+                            calorie: 500,
+                            carbs: 65,
+                            protein: 10,
+                            fat: 20,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-04",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "삶은 계란",
+                            weight: "50g",
+                            calorie: 65,
+                            carbs: 1,
+                            protein: 6,
+                            fat: 4,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "불고기",
+                            weight: "200g",
+                            calorie: 450,
+                            carbs: 10,
+                            protein: 30,
+                            fat: 25,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "바나나",
+                            weight: "120g",
+                            calorie: 100,
+                            carbs: 23,
+                            protein: 1,
+                            fat: 0.3,
+                        },
+                        {
+                            name: "우유",
+                            weight: "200ml",
+                            calorie: 140,
+                            carbs: 10,
+                            protein: 8,
+                            fat: 6,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-05",
+            meals: [
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "된장찌개",
+                            weight: "200g",
+                            calorie: 120,
+                            carbs: 6,
+                            protein: 8,
+                            fat: 6,
+                        },
+                        {
+                            name: "잡곡밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "닭강정",
+                            weight: "250g",
+                            calorie: 500,
+                            carbs: 55,
+                            protein: 25,
+                            fat: 20,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-06",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "삶은 달걀 2개",
+                            weight: "100g",
+                            calorie: 130,
+                            carbs: 2,
+                            protein: 12,
+                            fat: 9,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "비빔밥",
+                            weight: "350g",
+                            calorie: 700,
+                            carbs: 85,
+                            protein: 20,
+                            fat: 20,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "연어 스테이크",
+                            weight: "200g",
+                            calorie: 450,
+                            carbs: 0,
+                            protein: 40,
+                            fat: 30,
+                        },
+                        {
+                            name: "샐러드",
+                            weight: "150g",
+                            calorie: 100,
+                            carbs: 10,
+                            protein: 3,
+                            fat: 5,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "에너지바",
+                            weight: "50g",
+                            calorie: 220,
+                            carbs: 30,
+                            protein: 6,
+                            fat: 8,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-07",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "두유",
+                            weight: "200ml",
+                            calorie: 130,
+                            carbs: 10,
+                            protein: 7,
+                            fat: 5,
+                        },
+                        {
+                            name: "호밀빵",
+                            weight: "60g",
+                            calorie: 160,
+                            carbs: 28,
+                            protein: 5,
+                            fat: 2,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "김치찌개",
+                            weight: "300g",
+                            calorie: 320,
+                            carbs: 15,
+                            protein: 20,
+                            fat: 20,
+                        },
+                        {
+                            name: "공기밥",
+                            weight: "210g",
+                            calorie: 262,
+                            carbs: 60,
+                            protein: 6,
+                            fat: 0.9,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "떡볶이",
+                            weight: "250g",
+                            calorie: 480,
+                            carbs: 70,
+                            protein: 6,
+                            fat: 10,
+                        },
+                        {
+                            name: "삶은 달걀",
+                            weight: "50g",
+                            calorie: 65,
+                            carbs: 1,
+                            protein: 6,
+                            fat: 4,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-08",
+            meals: [
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "짜장면",
+                            weight: "400g",
+                            calorie: 720,
+                            carbs: 100,
+                            protein: 15,
+                            fat: 25,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "계란말이",
+                            weight: "150g",
+                            calorie: 220,
+                            carbs: 4,
+                            protein: 12,
+                            fat: 16,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "쿠키 2개",
+                            weight: "60g",
+                            calorie: 200,
+                            carbs: 24,
+                            protein: 3,
+                            fat: 10,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-09",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "씨리얼 + 우유",
+                            weight: "200g",
+                            calorie: 350,
+                            carbs: 60,
+                            protein: 10,
+                            fat: 5,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "돈까스",
+                            weight: "250g",
+                            calorie: 600,
+                            carbs: 50,
+                            protein: 25,
+                            fat: 35,
+                        },
+                        {
+                            name: "샐러드",
+                            weight: "100g",
+                            calorie: 80,
+                            carbs: 8,
+                            protein: 2,
+                            fat: 4,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "김밥",
+                            weight: "250g",
+                            calorie: 500,
+                            carbs: 70,
+                            protein: 12,
+                            fat: 15,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-10",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "토스트",
+                            weight: "70g",
+                            calorie: 190,
+                            carbs: 30,
+                            protein: 5,
+                            fat: 4,
+                        },
+                        {
+                            name: "오렌지주스",
+                            weight: "200ml",
+                            calorie: 110,
+                            carbs: 26,
+                            protein: 2,
+                            fat: 0,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "쌀국수",
+                            weight: "400g",
+                            calorie: 650,
+                            carbs: 90,
+                            protein: 15,
+                            fat: 15,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "된장찌개",
+                            weight: "200g",
+                            calorie: 120,
+                            carbs: 6,
+                            protein: 8,
+                            fat: 6,
+                        },
+                        {
+                            name: "잡곡밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "요거트",
+                            weight: "100g",
+                            calorie: 150,
+                            carbs: 20,
+                            protein: 4,
+                            fat: 5,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-11",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "삶은 달걀",
+                            weight: "50g",
+                            calorie: 65,
+                            carbs: 1,
+                            protein: 6,
+                            fat: 4,
+                        },
+                        {
+                            name: "우유",
+                            weight: "200ml",
+                            calorie: 130,
+                            carbs: 10,
+                            protein: 8,
+                            fat: 6,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "카레라이스",
+                            weight: "350g",
+                            calorie: 680,
+                            carbs: 90,
+                            protein: 12,
+                            fat: 20,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "닭볶음탕",
+                            weight: "300g",
+                            calorie: 560,
+                            carbs: 20,
+                            protein: 35,
+                            fat: 25,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "떡",
+                            weight: "80g",
+                            calorie: 180,
+                            carbs: 40,
+                            protein: 3,
+                            fat: 1,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-12",
+            meals: [
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "제육볶음",
+                            weight: "250g",
+                            calorie: 530,
+                            carbs: 20,
+                            protein: 30,
+                            fat: 30,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "라면",
+                            weight: "120g",
+                            calorie: 500,
+                            carbs: 72,
+                            protein: 10,
+                            fat: 18,
+                        },
+                        {
+                            name: "계란",
+                            weight: "50g",
+                            calorie: 70,
+                            carbs: 1,
+                            protein: 6,
+                            fat: 5,
+                        },
+                    ],
+                },
             ],
         },
         {
             date: "2025-04-13",
             meals: [
-                { time: "점심", totalKcal: 480 },
-                { time: "저녁", totalKcal: 500 },
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "베이글",
+                            weight: "100g",
+                            calorie: 270,
+                            carbs: 50,
+                            protein: 8,
+                            fat: 3,
+                        },
+                        {
+                            name: "크림치즈",
+                            weight: "30g",
+                            calorie: 120,
+                            carbs: 2,
+                            protein: 2,
+                            fat: 10,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "된장찌개",
+                            weight: "200g",
+                            calorie: 120,
+                            carbs: 6,
+                            protein: 8,
+                            fat: 6,
+                        },
+                        {
+                            name: "잡곡밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "스파게티",
+                            weight: "300g",
+                            calorie: 580,
+                            carbs: 75,
+                            protein: 15,
+                            fat: 20,
+                        },
+                    ],
+                },
             ],
         },
         {
-            date: "2025-04-12",
-            meals: [],
+            date: "2025-04-14",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "오트밀",
+                            weight: "100g",
+                            calorie: 380,
+                            carbs: 65,
+                            protein: 10,
+                            fat: 7,
+                        },
+                        {
+                            name: "바나나",
+                            weight: "120g",
+                            calorie: 100,
+                            carbs: 23,
+                            protein: 1,
+                            fat: 0.3,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "비빔냉면",
+                            weight: "350g",
+                            calorie: 620,
+                            carbs: 80,
+                            protein: 10,
+                            fat: 15,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "된장국",
+                            weight: "200g",
+                            calorie: 110,
+                            carbs: 5,
+                            protein: 7,
+                            fat: 5,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "요거트",
+                            weight: "100g",
+                            calorie: 150,
+                            carbs: 20,
+                            protein: 4,
+                            fat: 5,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-15",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "시리얼",
+                            weight: "80g",
+                            calorie: 300,
+                            carbs: 60,
+                            protein: 5,
+                            fat: 4,
+                        },
+                        {
+                            name: "우유",
+                            weight: "200ml",
+                            calorie: 130,
+                            carbs: 10,
+                            protein: 8,
+                            fat: 6,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "갈비탕",
+                            weight: "400g",
+                            calorie: 500,
+                            carbs: 8,
+                            protein: 35,
+                            fat: 30,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "김치볶음밥",
+                            weight: "300g",
+                            calorie: 500,
+                            carbs: 65,
+                            protein: 10,
+                            fat: 20,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-16",
+            meals: [
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "햄버거",
+                            weight: "250g",
+                            calorie: 700,
+                            carbs: 50,
+                            protein: 20,
+                            fat: 40,
+                        },
+                        {
+                            name: "콜라",
+                            weight: "200ml",
+                            calorie: 90,
+                            carbs: 23,
+                            protein: 0,
+                            fat: 0,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "된장찌개",
+                            weight: "200g",
+                            calorie: 120,
+                            carbs: 6,
+                            protein: 8,
+                            fat: 6,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "감자칩",
+                            weight: "60g",
+                            calorie: 220,
+                            carbs: 20,
+                            protein: 2,
+                            fat: 14,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-17",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "식빵",
+                            weight: "60g",
+                            calorie: 150,
+                            carbs: 28,
+                            protein: 4,
+                            fat: 1,
+                        },
+                        {
+                            name: "딸기잼",
+                            weight: "20g",
+                            calorie: 50,
+                            carbs: 13,
+                            protein: 0,
+                            fat: 0,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "불고기",
+                            weight: "200g",
+                            calorie: 450,
+                            carbs: 10,
+                            protein: 30,
+                            fat: 25,
+                        },
+                        {
+                            name: "잡곡밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "김치찌개",
+                            weight: "300g",
+                            calorie: 320,
+                            carbs: 15,
+                            protein: 20,
+                            fat: 20,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-18",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "오트밀",
+                            weight: "100g",
+                            calorie: 380,
+                            carbs: 65,
+                            protein: 10,
+                            fat: 7,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "스테이크",
+                            weight: "200g",
+                            calorie: 550,
+                            carbs: 5,
+                            protein: 40,
+                            fat: 35,
+                        },
+                        {
+                            name: "샐러드",
+                            weight: "150g",
+                            calorie: 100,
+                            carbs: 10,
+                            protein: 3,
+                            fat: 5,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "볶음밥",
+                            weight: "300g",
+                            calorie: 520,
+                            carbs: 70,
+                            protein: 10,
+                            fat: 18,
+                        },
+                    ],
+                },
+                {
+                    time: "간식",
+                    foods: [
+                        {
+                            name: "프로틴바",
+                            weight: "50g",
+                            calorie: 200,
+                            carbs: 15,
+                            protein: 15,
+                            fat: 8,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-19",
+            meals: [
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "김치볶음밥",
+                            weight: "300g",
+                            calorie: 500,
+                            carbs: 65,
+                            protein: 10,
+                            fat: 20,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "쫄면",
+                            weight: "350g",
+                            calorie: 700,
+                            carbs: 90,
+                            protein: 12,
+                            fat: 22,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            date: "2025-04-20",
+            meals: [
+                {
+                    time: "아침",
+                    foods: [
+                        {
+                            name: "시리얼",
+                            weight: "80g",
+                            calorie: 300,
+                            carbs: 60,
+                            protein: 5,
+                            fat: 4,
+                        },
+                        {
+                            name: "우유",
+                            weight: "200ml",
+                            calorie: 130,
+                            carbs: 10,
+                            protein: 8,
+                            fat: 6,
+                        },
+                    ],
+                },
+                {
+                    time: "점심",
+                    foods: [
+                        {
+                            name: "비빔밥",
+                            weight: "350g",
+                            calorie: 700,
+                            carbs: 85,
+                            protein: 20,
+                            fat: 20,
+                        },
+                    ],
+                },
+                {
+                    time: "저녁",
+                    foods: [
+                        {
+                            name: "된장찌개",
+                            weight: "200g",
+                            calorie: 120,
+                            carbs: 6,
+                            protein: 8,
+                            fat: 6,
+                        },
+                        {
+                            name: "밥",
+                            weight: "210g",
+                            calorie: 310,
+                            carbs: 64,
+                            protein: 6,
+                            fat: 1.5,
+                        },
+                    ],
+                },
+            ],
         },
     ];
 
