@@ -7,6 +7,7 @@ import Report_WeeklyCalendar from "@/app/components/report/Report_WeeklyCalendar
 import Report_WeeklyBarChart from "@/app/components/report/Report_WeeklyBarChart";
 import type { MealHistoryEntry } from "@/app/store/useMealHistoryStore";
 import { Box, Typography } from "@mui/material";
+import { useMealHistoryStore } from "@/app/store/useMealHistoryStore";
 
 type WeeklyDataItem = {
     date: string;
@@ -20,7 +21,7 @@ const Report_Datagram = () => {
         dayjs().format("YYYY-MM-DD")
     );
     const [weekStartDate, setWeekStartDate] = useState(
-        dayjs().startOf("week").add(1, "day") // 월요일 기준
+        dayjs().startOf("week") // ✅ 일요일 기준
     );
     const [weeklyData, setWeeklyData] = useState<WeeklyDataItem[]>([]);
 
@@ -44,12 +45,15 @@ const Report_Datagram = () => {
                 "/api/mock/history-meal"
             );
             const history = res.data.history;
-
+            useMealHistoryStore.getState().setHistoryList(history);
             const week: WeeklyDataItem[] = [];
 
             for (let i = 0; i < 7; i++) {
-                const date = weekStartDate.add(i, "day").format("YYYY-MM-DD");
-                const dayLabel = ["일", "월", "화", "수", "목", "금", "토"][i];
+                const dateObj = weekStartDate.add(i, "day");
+                const date = dateObj.format("YYYY-MM-DD");
+                const dayLabel = ["일", "월", "화", "수", "목", "금", "토"][
+                    dateObj.day()
+                ];
 
                 const entry = history.find(h => h.date === date);
                 const hasMeal = !!entry;
