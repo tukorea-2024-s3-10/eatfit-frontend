@@ -27,7 +27,11 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "src/app/components/common/IntroLogo"
+        "src/app/components/common/IntroLogo",
+        "src/app/api/mock/history-meal/route",
+        "src/app/api/mock/history-meal-detail/route",
+        "src/app/api/mock/photo-foods/route",
+        "next-sitemap.config.js"
     ],
     "exclude": ["node_modules"]
 }
