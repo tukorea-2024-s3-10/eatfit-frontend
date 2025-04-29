@@ -26,7 +26,7 @@ const ProfileSetupPurpose = () => {
             </Typography>
 
             {/* 버튼들 */}
-            <div className="flex flex-wrap gap-[12px]">
+            <div className="flex flex-wrap ml-2 gap-[12px]">
                 {purposes.map(item => (
                     <Button
                         key={item}

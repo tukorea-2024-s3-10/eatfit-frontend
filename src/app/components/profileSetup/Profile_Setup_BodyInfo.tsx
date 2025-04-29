@@ -21,7 +21,7 @@ const ProfileSetupBodyInfo = () => {
         };
 
     return (
-        <section className="w-full flex flex-col gap-2 px-4">
+        <section className="w-full flex  flex-col gap-2 px-4">
             {/* 제목 */}
             <Typography
                 variant="subtitle1"
@@ -36,7 +36,7 @@ const ProfileSetupBodyInfo = () => {
                 신체 정보
             </Typography>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 justify-center">
                 {/* 나이 */}
                 <div
                     className="flex flex-col justify-between items-center border rounded-[12px] px-4 py-5"

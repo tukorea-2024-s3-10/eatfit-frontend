@@ -8,7 +8,7 @@ const page = () => {
     //         "http://localhost:8080/oauth2/authorization/naver";
     // };
     const handleNaverLogin = () => {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/naver`;
+        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}oauth2/authorization/naver`;
     };
 
     // 카카오 로그인 요청

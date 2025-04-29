@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     // ✅ 아이콘 (파비콘, iOS 홈화면용 등)
     icons: {
         icon: "/icons/Logo.png", // 일반 파비콘
-        apple: "/icons/Logo.png", // iOS 홈화면 아이콘
+        apple: "/Logo192.png", // iOS 홈화면 아이콘
     },
 
     // ✅ 소셜 미디어 공유 (Open Graph 설정)
@@ -88,7 +88,8 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <EmotionRegistry>
-                    <div className="w-full max-w-[480px] mx-auto min-h-screen bg-white">
+                    {/* <div className="w-full max-w-[480px] mx-auto min-h-screen bg-white"> */}
+                    <div className="w-full min-h-screen bg-white">
                         {children}
                     </div>
                 </EmotionRegistry>
