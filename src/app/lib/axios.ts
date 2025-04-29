@@ -3,7 +3,7 @@ import axios from "axios";
 
 // ✅ axios 인스턴스를 생성함 (모든 API 요청은 이걸 사용함)
 const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // 🔹 기본 API URL (.env에서 설정)
+    baseURL: "https://api.eatfit.site", // 🔹 기본 API URL (.env에서 설정)
     headers: {
         "Content-Type": "application/json", // 🔹 기본적으로 JSON 형식으로 보냄
     },
