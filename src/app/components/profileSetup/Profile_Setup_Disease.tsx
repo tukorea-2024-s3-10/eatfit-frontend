@@ -52,7 +52,7 @@ const ProfileSetupDisease = () => {
             </Typography>
 
             {/* 버튼 리스트 */}
-            <div className="flex flex-wrap gap-[8px]">
+            <div className="flex flex-wrap gap-[8px] ml-2">
                 {diseasesList.map(disease => {
                     const isdiseases = diseases.includes(disease);
 
