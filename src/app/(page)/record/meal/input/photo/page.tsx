@@ -24,7 +24,7 @@ const Page = () => {
             }
         };
         fetchMockData();
-    }, []);
+    }, [setPhotoFoodList]);
     return (
         <div>
             <MealInputPhoto_Header />
