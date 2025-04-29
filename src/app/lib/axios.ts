@@ -27,17 +27,19 @@ instance.interceptors.request.use(
                         { withCredentials: true }
                     );
 
+                    // ✅ 서버 응답에서 Authorization 헤더 추출
                     const authHeader =
                         response.headers["authorization"] ||
-                        response.headers["Authorization"]; // ✅ 소문자/대문자 둘 다 대응
+                        response.headers["Authorization"]; // 소문자/대문자 모두 대응
                     console.log("📦 받은 Authorization 헤더:", authHeader);
 
-                    if (authHeader && authHeader.startsWith("Bearer: ")) {
-                        const extractedToken = authHeader.split("Bearer: ")[1];
+                    if (authHeader && authHeader.startsWith("Bearer ")) {
+                        // ✅ 콜론 ❌, 공백 ✅
+                        const extractedToken = authHeader.split("Bearer ")[1]; // 🔥 "Bearer " 다음 문자열 추출
                         console.log("✅ 추출한 accessToken:", extractedToken);
 
-                        localStorage.setItem("accessToken", extractedToken);
-                        accessToken = extractedToken; // 🔥 accessToken 업데이트
+                        localStorage.setItem("accessToken", extractedToken); // ✅ 저장
+                        accessToken = extractedToken; // 🔥 accessToken 메모리 업데이트
                     } else {
                         console.error(
                             "❌ Authorization 헤더가 없거나 형식이 올바르지 않습니다."
@@ -46,7 +48,7 @@ instance.interceptors.request.use(
                     }
                 } catch (error) {
                     console.error("❌ accessToken 재발급 실패:", error);
-                    throw error;
+                    throw error; // 에러 다시 던져서 요청 자체를 막는다
                 }
             }
 
