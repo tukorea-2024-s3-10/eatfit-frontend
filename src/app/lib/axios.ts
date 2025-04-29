@@ -10,63 +10,47 @@ const instance = axios.create({
     withCredentials: true, // 🔹 쿠키 (refresh_token) 포함하여 요청
 });
 
-// ✅ 요청을 보내기 전에 실행되는 interceptor
+// ✅ 요청 보내기 전에 실행되는 interceptor
 instance.interceptors.request.use(
     async config => {
         if (typeof window !== "undefined") {
-            let accessToken = localStorage.getItem("accessToken"); // ✅ 저장된 accessToken 가져오기
+            let accessToken = localStorage.getItem("accessToken");
 
-            // ✅ accessToken이 없으면 refresh_token으로 재발급 시도
             if (!accessToken) {
                 console.log("🔄 accessToken 없음 → 재발급 요청 시도");
 
-                const cookies = document.cookie.split(";");
-                const refreshTokenCookie = cookies.find(cookie =>
-                    cookie.trim().startsWith("refresh_token=")
-                );
+                try {
+                    // ✅ accessToken 재발급 요청
+                    const response = await axios.post(
+                        "https://api.eatfit.site/api/core/auth/reissue",
+                        {},
+                        { withCredentials: true }
+                    );
 
-                if (refreshTokenCookie) {
-                    const refreshToken = refreshTokenCookie.split("=")[1];
+                    const authHeader =
+                        response.headers["authorization"] ||
+                        response.headers["Authorization"]; // ✅ 소문자/대문자 둘 다 대응
+                    console.log("📦 받은 Authorization 헤더:", authHeader);
 
-                    try {
-                        // ✅ accessToken 재발급 요청
-                        const response = await axios.post(
-                            "https://api.eatfit.site/api/core/auth/reissue",
-                            { refreshToken },
-                            { withCredentials: true }
+                    if (authHeader && authHeader.startsWith("Bearer: ")) {
+                        const extractedToken = authHeader.split("Bearer: ")[1];
+                        console.log("✅ 추출한 accessToken:", extractedToken);
+
+                        localStorage.setItem("accessToken", extractedToken);
+                        accessToken = extractedToken; // 🔥 accessToken 업데이트
+                    } else {
+                        console.error(
+                            "❌ Authorization 헤더가 없거나 형식이 올바르지 않습니다."
                         );
-
-                        // ✅ 응답 헤더에서 Authorization 추출
-                        const authHeader = response.headers.authorization;
-                        console.log("📦 받은 Authorization 헤더:", authHeader);
-
-                        if (authHeader && authHeader.startsWith("Bearer ")) {
-                            const extractedToken =
-                                authHeader.split("Bearer ")[1];
-                            console.log(
-                                "✅ 추출한 accessToken:",
-                                extractedToken
-                            );
-
-                            localStorage.setItem("accessToken", extractedToken);
-                            accessToken = extractedToken; // 🔥 갱신된 accessToken을 메모리에도 업데이트
-                        } else {
-                            console.error(
-                                "❌ Authorization 헤더 형식이 올바르지 않습니다."
-                            );
-                            throw new Error("토큰 재발급 실패");
-                        }
-                    } catch (error) {
-                        console.error("❌ accessToken 재발급 실패:", error);
-                        // (선택) 재발급 실패 시 추가 조치: 예를 들어 로그인 페이지로 강제 이동
+                        throw new Error("토큰 재발급 실패");
                     }
-                } else {
-                    console.error("❌ refresh_token 쿠키 없음");
-                    throw new Error("리프레시 토큰이 존재하지 않습니다.");
+                } catch (error) {
+                    console.error("❌ accessToken 재발급 실패:", error);
+                    throw error;
                 }
             }
 
-            // ✅ 최종적으로 accessToken이 존재하면 Authorization 헤더 추가
+            // ✅ 최종적으로 accessToken이 있으면 Authorization 헤더 세팅
             if (accessToken) {
                 config.headers.Authorization = `Bearer ${accessToken}`;
             }
@@ -79,4 +63,4 @@ instance.interceptors.request.use(
     }
 );
 
-export default instance; // ✅ 인스턴스를 export하여
+export default instance; // ✅ 기본 export
