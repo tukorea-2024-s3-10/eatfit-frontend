@@ -10,7 +10,7 @@ interface ProfileSetupSubmitProps {
     isValid: boolean; // 모든 입력값이 유효한지 여부
     buttonText?: string; // 버튼에 표시할 텍스트 (optional)
     redirectTo?: string; // 제출 후 이동할 경로 (optional)
-    onSubmit?: () => void; // (추가 가능) 외부에서 제출 동작을 제어하고 싶을 때 사용할 콜백 함수 (현재는 사용 안함)
+    onSubmit?: () => void; // (추가 가능) 외부에서 제출 동작을 제어하고 싶을 때 사용할 콜백 함수
 }
 
 // ✅ ProfileSetupSubmit 컴포넌트
@@ -23,9 +23,8 @@ const ProfileSetupSubmit = ({
 
     // ✅ 프로필 제출 함수 (버튼 클릭 시 실행)
     const handleSubmit = async () => {
-        if (!isValid) return; // ❗️ 입력이 유효하지 않으면 제출하지 않음
+        if (!isValid) return; // ❗️ 입력값이 유효하지 않으면 요청 막기
 
-        // ✅ Zustand 스토어에서 현재 입력된 프로필 정보 가져오기
         const {
             nickname,
             gender,
@@ -38,10 +37,54 @@ const ProfileSetupSubmit = ({
         } = useProfileSetupStore.getState();
 
         try {
-            const accessToken = localStorage.getItem("accessToken"); // ✅ 저장된 accessToken 가져오기
+            let accessToken = localStorage.getItem("accessToken"); // ✅ 저장된 accessToken 가져오기
+
+            // ✅ accessToken이 없으면 refresh_token으로 재발급 시도
+            if (!accessToken) {
+                console.log("🔄 accessToken이 없어서 재발급 요청 시작");
+
+                const cookies = document.cookie.split(";");
+                const refreshTokenCookie = cookies.find(cookie =>
+                    cookie.trim().startsWith("refresh_token=")
+                );
+
+                if (refreshTokenCookie) {
+                    const refreshToken = refreshTokenCookie.split("=")[1];
+
+                    const response = await axios.post(
+                        "https://api.eatfit.site/api/core/auth/reissue",
+                        { refreshToken },
+                        { withCredentials: true }
+                    );
+
+                    const authHeader = response.headers.authorization;
+                    console.log("📦 받은 Authorization 헤더:", authHeader);
+
+                    if (authHeader && authHeader.startsWith("Bearer ")) {
+                        const extractedToken = authHeader.split("Bearer ")[1];
+                        console.log("✅ 추출한 accessToken:", extractedToken);
+
+                        localStorage.setItem("accessToken", extractedToken);
+                        accessToken = extractedToken; // 🔥 accessToken 갱신!
+                    } else {
+                        console.error(
+                            "❌ Authorization 헤더 형식이 올바르지 않습니다."
+                        );
+                        throw new Error("토큰 재발급 실패");
+                    }
+                } else {
+                    console.error("❌ refresh_token 쿠키 없음");
+                    throw new Error("리프레시 토큰 없음");
+                }
+            }
+
+            // ✅ 최종적으로 accessToken이 null이 아님을 보장
+            if (!accessToken) {
+                throw new Error("❌ accessToken이 존재하지 않습니다.");
+            }
 
             // ✅ 프로필 등록 API 호출
-            const response = await axios.post(
+            const profileResponse = await axios.post(
                 "https://api.eatfit.site/api/core/users/profile",
                 {
                     profileImage,
@@ -57,20 +100,17 @@ const ProfileSetupSubmit = ({
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`, // ✅ Authorization 헤더에 토큰 추가
+                        Authorization: `Bearer ${accessToken}`,
                     },
                 }
             );
 
-            // ✅ 성공했을 때 콘솔에 정보 출력
             console.log("✅ 프로필 등록 완료");
-            console.log("📦 상태 코드:", response.status);
-            console.log("📦 응답 헤더:", response.headers);
+            console.log("📦 상태 코드:", profileResponse.status);
+            console.log("📦 응답 헤더:", profileResponse.headers);
 
-            // ✅ 등록 성공 후 리다이렉트 (redirectTo가 있으면 해당 경로로, 없으면 기본 nutritionPlan으로)
             router.push(redirectTo || "/profile/nutritionPlan");
         } catch (error) {
-            // ❗️ 에러 발생 시 콘솔 출력 + 알림 띄우기
             console.error("❌ 프로필 등록 실패:", error);
             alert("프로필 등록에 실패했습니다. 다시 시도해주세요.");
         }
@@ -80,8 +120,8 @@ const ProfileSetupSubmit = ({
         <div className="w-full flex justify-center py-6">
             {/* ✅ 프로필 제출 버튼 */}
             <Button
-                onClick={handleSubmit} // 🔥 버튼 클릭 시 handleSubmit 실행
-                disabled={!isValid} // 🔥 입력값이 유효하지 않으면 버튼 비활성화
+                onClick={handleSubmit}
+                disabled={!isValid}
                 variant="outlined"
                 sx={{
                     width: "321px",
@@ -89,7 +129,7 @@ const ProfileSetupSubmit = ({
                     borderRadius: "12px",
                     fontSize: "16px",
                     fontWeight: 600,
-                    color: isValid ? "#15B493" : "#C4C4C4", // 🔹 활성/비활성 색상 변경
+                    color: isValid ? "#15B493" : "#C4C4C4",
                     borderColor: isValid ? "#15B493" : "#E0E0E0",
                     backgroundColor: "#fff",
                     "&:hover": {
@@ -98,8 +138,7 @@ const ProfileSetupSubmit = ({
                     },
                 }}
             >
-                {buttonText ?? "설정하기"}{" "}
-                {/* 🔹 버튼에 표시할 텍스트 (기본값: "설정하기") */}
+                {buttonText ?? "설정하기"}
             </Button>
         </div>
     );
