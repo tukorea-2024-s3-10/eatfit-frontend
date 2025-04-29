@@ -8,7 +8,8 @@ const page = () => {
     //         "http://localhost:8080/oauth2/authorization/naver";
     // };
     const handleNaverLogin = () => {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}oauth2/authorization/naver`;
+        window.location.href =
+            "https://api.eatfit.site/oauth2/authorization/naver";
     };
 
     // 카카오 로그인 요청
@@ -17,7 +18,8 @@ const page = () => {
     //         "http://localhost:8080/oauth2/authorization/kakao";
     // };
     const handleKakaoLogin = () => {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/kakao`;
+        window.location.href =
+            "https://api.eatfit.site/oauth2/authorization/kakao";
     };
 
     return (
