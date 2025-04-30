@@ -3,14 +3,14 @@ import axios from "axios";
 
 // ✅ axios 인스턴스 생성
 const instance = axios.create({
-    baseURL: "https://api.eatfit.site", // 🔹 API 서버 기본 URL
+    baseURL: "https://api.eatfit.site",
     headers: {
-        "Content-Type": "application/json", // 🔹 모든 요청은 JSON 포맷
+        "Content-Type": "application/json",
     },
-    withCredentials: true, // 🔹 쿠키 (refresh_token) 포함하여 요청
+    withCredentials: true,
 });
 
-// ✅ 요청 보내기 전에 실행되는 interceptor
+// ✅ 요청 전 interceptor: accessToken 없으면 재발급 시도
 instance.interceptors.request.use(
     async config => {
         if (typeof window !== "undefined") {
@@ -20,39 +20,31 @@ instance.interceptors.request.use(
                 console.log("🔄 accessToken 없음 → 재발급 요청 시도");
 
                 try {
-                    // ✅ accessToken 재발급 요청
                     const response = await axios.post(
                         "https://api.eatfit.site/api/core/auth/reissue",
                         {},
                         { withCredentials: true }
                     );
 
-                    // ✅ 서버 응답에서 Authorization 헤더 추출
                     const authHeader =
                         response.headers["authorization"] ||
-                        response.headers["Authorization"]; // 소문자/대문자 모두 대응
+                        response.headers["Authorization"];
                     console.log("📦 받은 Authorization 헤더:", authHeader);
 
                     if (authHeader && authHeader.startsWith("Bearer ")) {
-                        // ✅ 콜론 ❌, 공백 ✅
-                        const extractedToken = authHeader.split("Bearer ")[1]; // 🔥 "Bearer " 다음 문자열 추출
+                        const extractedToken = authHeader.split("Bearer ")[1];
                         console.log("✅ 추출한 accessToken:", extractedToken);
-
-                        localStorage.setItem("accessToken", extractedToken); // ✅ 저장
-                        accessToken = extractedToken; // 🔥 accessToken 메모리 업데이트
+                        localStorage.setItem("accessToken", extractedToken);
+                        accessToken = extractedToken;
                     } else {
-                        console.error(
-                            "❌ Authorization 헤더가 없거나 형식이 올바르지 않습니다."
-                        );
-                        throw new Error("토큰 재발급 실패");
+                        throw new Error("Authorization 헤더 형식 오류");
                     }
                 } catch (error) {
                     console.error("❌ accessToken 재발급 실패:", error);
-                    throw error; // 에러 다시 던져서 요청 자체를 막는다
+                    throw error;
                 }
             }
 
-            // ✅ 최종적으로 accessToken이 있으면 Authorization 헤더 세팅
             if (accessToken) {
                 config.headers.Authorization = `Bearer ${accessToken}`;
             }
@@ -60,9 +52,51 @@ instance.interceptors.request.use(
 
         return config;
     },
-    error => {
+    error => Promise.reject(error)
+);
+
+// ✅ 응답 후 interceptor: 401 발생 시 토큰 재발급 + 요청 재시도
+instance.interceptors.response.use(
+    response => response,
+    async error => {
+        const originalRequest = error.config;
+
+        if (
+            error.response?.status === 401 &&
+            error.response?.data === "access token expired" &&
+            !originalRequest._retry
+        ) {
+            originalRequest._retry = true;
+
+            try {
+                const response = await axios.post(
+                    "https://api.eatfit.site/api/core/auth/reissue",
+                    {},
+                    { withCredentials: true }
+                );
+
+                const authHeader =
+                    response.headers["authorization"] ||
+                    response.headers["Authorization"];
+
+                if (authHeader && authHeader.startsWith("Bearer ")) {
+                    const newToken = authHeader.split("Bearer ")[1];
+                    localStorage.setItem("accessToken", newToken);
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    console.log("✅ 토큰 재발급 후 요청 재시도");
+
+                    return instance(originalRequest); // ✅ 재요청
+                } else {
+                    throw new Error("Authorization 헤더 형식 오류");
+                }
+            } catch (reissueError) {
+                console.error("🔒 재발급 실패 → 로그아웃 처리 필요");
+                return Promise.reject(reissueError);
+            }
+        }
+
         return Promise.reject(error);
     }
 );
 
-export default instance; // ✅ 기본 export
+export default instance;
