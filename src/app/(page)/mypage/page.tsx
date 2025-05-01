@@ -50,7 +50,7 @@ const MyPage = () => {
         };
         fetchProfile();
     }, []);
-
+    // 그만하고싶다.
     return (
         <Box>
             <MyPage_Header />
