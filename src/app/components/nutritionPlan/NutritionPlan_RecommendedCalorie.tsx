@@ -1,10 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 
 const NutritionPlan_RecommendedCalorie = () => {
     const targetCalorie = useNutritionPlanStore(state => state.targetCalorie);
+    const recalculateCalorie = useNutritionPlanStore(
+        state => state.recalculateCalorie
+    );
+
+    // 🚀 컴포넌트가 마운트될 때 칼로리 계산
+    useEffect(() => {
+        recalculateCalorie();
+    }, [recalculateCalorie]);
 
     return (
         <section className="w-full px-4 pt-6 pb-4 flex justify-center">

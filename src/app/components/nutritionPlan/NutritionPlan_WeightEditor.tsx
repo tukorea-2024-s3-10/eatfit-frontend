@@ -13,14 +13,14 @@ import {
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 
 const NutritionPlan_TargetWeightEditor = () => {
-    const [open, setOpen] = useState(false); // 모달 열림 상태
+    const [open, setOpen] = useState(false);
 
     const targetWeight = useNutritionPlanStore(state => state.targetWeight);
-    const setTargetWeight = useNutritionPlanStore(
-        state => state.setTargetWeight
+    const updateTargetWeight = useNutritionPlanStore(
+        state => state.updateTargetWeight
     );
 
-    const [inputValue, setInputValue] = useState(targetWeight.toString()); // 입력값 상태
+    const [inputValue, setInputValue] = useState(targetWeight.toString());
 
     const handleOpen = () => {
         setInputValue(targetWeight.toString());
@@ -32,14 +32,13 @@ const NutritionPlan_TargetWeightEditor = () => {
     const handleSubmit = () => {
         const value = parseFloat(inputValue);
         if (!isNaN(value)) {
-            setTargetWeight(value);
+            updateTargetWeight(value); // ✅ 한 번에 처리
             setOpen(false);
         }
     };
 
     return (
-        <section className="w-full px-4  flex flex-col items-center">
-            {/* 상단 안내 문구 */}
+        <section className="w-full px-4 flex flex-col items-center">
             <Typography
                 sx={{
                     fontSize: 16,
@@ -62,7 +61,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                 설정 후 목표를 이룰 수 있도록 도울게요!
             </Typography>
 
-            {/* 입력 박스 */}
             <Box
                 sx={{
                     width: "312px",
@@ -76,7 +74,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                     backgroundColor: "#fff",
                 }}
             >
-                {/* 왼쪽 라벨 */}
                 <Typography
                     sx={{
                         fontSize: 14,
@@ -88,14 +85,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                     목표 몸무게
                 </Typography>
 
-                {/* 몸무게 수치 + 버튼 */}
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Typography
                         sx={{
                             fontSize: 20,
@@ -141,7 +131,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                 </Box>
             </Box>
 
-            {/* 모달 */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -163,7 +152,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                             outline: "none",
                         }}
                     >
-                        {/* 핸들바 */}
                         <Box
                             sx={{
                                 width: 37,
@@ -175,7 +163,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                             }}
                         />
 
-                        {/* 모달 타이틀 */}
                         <Typography
                             sx={{
                                 fontSize: 16,
@@ -187,7 +174,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                             목표 몸무게를 수정하세요
                         </Typography>
 
-                        {/* 입력 필드 */}
                         <TextField
                             variant="standard"
                             type="number"
@@ -233,7 +219,6 @@ const NutritionPlan_TargetWeightEditor = () => {
                             }}
                         />
 
-                        {/* 수정 버튼 */}
                         <Button
                             onClick={handleSubmit}
                             fullWidth

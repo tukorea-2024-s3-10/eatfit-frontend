@@ -8,15 +8,25 @@ import MyPage_Settings from "@/app/components/mypage/MyPage_Settings";
 import TabBar from "@/app/components/common/TabBar";
 import { useEffect } from "react";
 import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
-import axios from "@/app/lib/axios";
+import axios from "axios"; // ✅ 기본 axios 사용
 
 const MyPage = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
+                const accessToken = localStorage.getItem("accessToken");
+
                 const res = await axios.get(
-                    "https://api.eatfit.site/api/core/users/profile"
+                    "https://api.eatfit.site/api/core/users/profile",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                            "Content-Type": "application/json",
+                        },
+                        withCredentials: true,
+                    }
                 );
+
                 const {
                     name,
                     gender,
@@ -28,12 +38,10 @@ const MyPage = () => {
                     disease,
                 } = res.data.data;
 
-                // 나이 계산산
-                const currentYear = new Date().getFullYear(); // 현재 년도
-                const age = (currentYear - birthYear).toString(); // 나이 계산
-                const diseases = disease ? disease.split(",") : []; // 질병은 배열로 관리
+                const currentYear = new Date().getFullYear();
+                const age = (currentYear - birthYear).toString();
+                const diseases = disease ? disease.split(",") : [];
 
-                // 스토어에 상태 업데이트트
                 const store = useProfileSetupStore.getState();
                 store.setNickname(name);
                 store.setGender(gender);
@@ -43,18 +51,19 @@ const MyPage = () => {
                 store.setTargetWeight(targetWeight.toString());
                 store.setPurpose(goalCategory);
                 store.setDiseases(diseases);
+
                 console.log("✅ 마이페이지 프로필 로딩 성공: ", res.data.data);
             } catch (err) {
                 console.error("❌ 프로필 조회 실패", err);
             }
         };
+
         fetchProfile();
     }, []);
-    // 그만하고싶다.
+
     return (
         <Box>
             <MyPage_Header />
-
             <Box px={3} pt={2} pb={10}>
                 <MyPage_ProfileCard />
                 <Divider sx={{ my: 3 }} />
@@ -62,7 +71,6 @@ const MyPage = () => {
                 <Divider sx={{ my: 3 }} />
                 <MyPage_Settings />
             </Box>
-
             <TabBar />
         </Box>
     );
