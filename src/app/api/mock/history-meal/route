@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const mockData = [
         {
-            date: "2025-04-01",
+            date: "2025-05-01",
             meals: [
                 {
                     time: "아침",
@@ -63,7 +63,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-02",
+            date: "2025-05-02",
             meals: [
                 {
                     time: "점심",
@@ -118,7 +118,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-03",
+            date: "2025-05-03",
             meals: [
                 {
                     time: "아침",
@@ -178,7 +178,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-04",
+            date: "2025-05-04",
             meals: [
                 {
                     time: "아침",
@@ -238,7 +238,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-05",
+            date: "2025-05-05",
             meals: [
                 {
                     time: "점심",
@@ -277,7 +277,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-06",
+            date: "2025-05-06",
             meals: [
                 {
                     time: "아침",
@@ -514,7 +514,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-10",
+            date: "2025-04-20",
             meals: [
                 {
                     time: "아침",
@@ -587,7 +587,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-11",
+            date: "2025-04-21",
             meals: [
                 {
                     time: "아침",
@@ -652,7 +652,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-12",
+            date: "2025-04-22",
             meals: [
                 {
                     time: "점심",
@@ -699,7 +699,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-13",
+            date: "2025-04-23",
             meals: [
                 {
                     time: "아침",
@@ -759,7 +759,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-14",
+            date: "2025-04-24",
             meals: [
                 {
                     time: "아침",
@@ -832,7 +832,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-15",
+            date: "2025-04-25",
             meals: [
                 {
                     time: "아침",
@@ -892,7 +892,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-16",
+            date: "2025-04-26",
             meals: [
                 {
                     time: "점심",
@@ -952,7 +952,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-17",
+            date: "2025-04-27",
             meals: [
                 {
                     time: "아침",
@@ -1012,7 +1012,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-18",
+            date: "2025-04-28",
             meals: [
                 {
                     time: "아침",
@@ -1077,7 +1077,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-19",
+            date: "2025-04-29",
             meals: [
                 {
                     time: "점심",
@@ -1108,7 +1108,7 @@ export async function GET() {
             ],
         },
         {
-            date: "2025-04-20",
+            date: "2025-04-30",
             meals: [
                 {
                     time: "아침",
