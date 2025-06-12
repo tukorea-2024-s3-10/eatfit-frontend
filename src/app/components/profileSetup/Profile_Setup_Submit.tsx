@@ -23,6 +23,9 @@ const ProfileSetupSubmit = ({
     const handleSubmit = async () => {
         if (!isValid) return;
 
+        console.log("✅ 모든 정보 입력 완료!");
+        console.log(useProfileSetupStore.getState());
+
         const { nickname, gender, age, height, weight, purpose, diseases } =
             useProfileSetupStore.getState();
 
