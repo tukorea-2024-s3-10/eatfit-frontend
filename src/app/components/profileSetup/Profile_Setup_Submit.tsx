@@ -2,72 +2,62 @@
 
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
-import axios from "@/app/lib/axios"; // ✅ 커스텀 axios 인스턴스 사용
+import axiosInstance from "@/app/lib/axiosInstance";
 import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
 
-// ✅ ProfileSetupSubmit 컴포넌트 props 타입 정의
 interface ProfileSetupSubmitProps {
     isValid: boolean;
     buttonText?: string;
     redirectTo?: string;
-    onSubmit?: () => void;
+    onSubmit?: () => void; // ✅ 외부에서 함수 전달 가능하게 추가
 }
 
-// ✅ ProfileSetupSubmit 컴포넌트
 const ProfileSetupSubmit = ({
     isValid,
     buttonText,
     redirectTo,
+    onSubmit,
 }: ProfileSetupSubmitProps) => {
     const router = useRouter();
 
-    // ✅ 프로필 제출 함수
     const handleSubmit = async () => {
         if (!isValid) return;
 
-        const {
-            nickname,
-            gender,
-            age,
-            height,
-            weight,
-            purpose,
-            diseases,
-            profileImage,
-        } = useProfileSetupStore.getState();
+        const { nickname, gender, age, height, weight, purpose, diseases } =
+            useProfileSetupStore.getState();
 
         try {
-            // ✅ 프로필 등록 API 호출
-            const profileResponse = await axios.post(
-                "/api/core/users/profile", // ✅ baseURL 자동 적용
+            const response = await axiosInstance.patch(
+                "https://api.eatfit.site/api/core/users/profile",
                 {
-                    profileImage,
-                    nickname,
+                    name: nickname,
                     gender,
-                    age: Number(age),
+                    birthYear: new Date().getFullYear() - Number(age), // age → birthYear 계산
                     height: Number(height),
                     weight: Number(weight),
-                    targetWeight: Number(weight),
-                    goalType: purpose,
-                    diseases,
+                    targetWeight: Number(weight), // 💡 필요 시 수정 가능
+                    goalCategory: purpose,
+                    disease: diseases.join(","), // 배열 → 문자열 변환
                 }
             );
 
-            console.log("✅ 프로필 등록 완료");
-            console.log("📦 상태 코드:", profileResponse.status);
-            console.log("📦 응답 헤더:", profileResponse.headers);
+            console.log("✅ 프로필 수정 성공:", response.data);
 
+            // 외부에서 onSubmit을 넘겨준 경우 실행
+            if (onSubmit) onSubmit();
+
+            // 리다이렉트
             router.push(redirectTo || "/profile/nutritionPlan");
         } catch (error) {
-            console.error("❌ 프로필 등록 실패:", error);
-            alert("프로필 등록에 실패했습니다. 다시 시도해주세요.");
+            console.error("❌ 프로필 수정 실패:", error);
+            alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
         }
     };
 
     return (
         <div className="w-full flex justify-center py-6">
             <Button
-                onClick={handleSubmit}
+                onClick={onSubmit ?? handleSubmit} // ✅ 외부 onSubmit 우선
                 disabled={!isValid}
                 variant="outlined"
                 sx={{

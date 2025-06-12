@@ -8,7 +8,7 @@ import MyPage_Settings from "@/app/components/mypage/MyPage_Settings";
 import TabBar from "@/app/components/common/TabBar";
 import { useEffect } from "react";
 import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
-import axios from "axios"; // ✅ 기본 axios 사용
+import axiosInstance from "@/app/lib/axiosInstance"; // ✅ 변경 완료
 
 const MyPage = () => {
     useEffect(() => {
@@ -16,7 +16,7 @@ const MyPage = () => {
             try {
                 const accessToken = localStorage.getItem("accessToken");
 
-                const res = await axios.get(
+                const res = await axiosInstance.get(
                     "https://api.eatfit.site/api/core/users/profile",
                     {
                         headers: {

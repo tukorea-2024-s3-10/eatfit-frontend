@@ -3,17 +3,39 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
+import axiosInstance from "../../lib/axiosInstance";
 
 const NutritionPlan_RecommendedCalorie = () => {
     const targetCalorie = useNutritionPlanStore(state => state.targetCalorie);
-    const recalculateCalorie = useNutritionPlanStore(
-        state => state.recalculateCalorie
+    const setGoalsFromAPI = useNutritionPlanStore(
+        state => state.setGoalsFromAPI
     );
 
-    // 🚀 컴포넌트가 마운트될 때 칼로리 계산
     useEffect(() => {
-        recalculateCalorie();
-    }, [recalculateCalorie]);
+        const fetchGoal = async () => {
+            try {
+                const res = await axiosInstance.get(
+                    "https://api.eatfit.site/api/core/users/intake-goal"
+                );
+
+                const data = res.data?.data;
+
+                if (data) {
+                    // ✅ 스토어에 목표 섭취량 저장
+                    setGoalsFromAPI({
+                        calorieGoal: data.calorieGoal,
+                        carbohydrateGoal: data.carbohydrateGoal,
+                        proteinGoal: data.proteinGoal,
+                        fatGoal: data.fatGoal,
+                    });
+                }
+            } catch (error) {
+                console.error("❌ 목표 섭취량 불러오기 실패:", error);
+            }
+        };
+
+        fetchGoal();
+    }, [setGoalsFromAPI]);
 
     return (
         <section className="w-full px-4 pt-6 pb-4 flex justify-center">

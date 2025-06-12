@@ -15,8 +15,11 @@ const WeightRecord_SummaryCard = () => {
     const prevKey = dayjs().subtract(1, "day").format("YYYY-MM-DD");
 
     // ✅ 체중 데이터 가져오기
-    const todayWeight = weightByDate[todayKey];
-    const prevWeight = weightByDate[prevKey];
+    const todayWeightObj = weightByDate[todayKey];
+    const prevWeightObj = weightByDate[prevKey];
+
+    const todayWeight = todayWeightObj?.weight;
+    const prevWeight = prevWeightObj?.weight;
 
     // ✅ 전날 대비 체중 변화 계산
     const weightDiff =
@@ -68,7 +71,9 @@ const WeightRecord_SummaryCard = () => {
                             fontWeight={700}
                             color="#00C092"
                         >
-                            {todayWeight?.toFixed(1) ?? "--"}
+                            {todayWeight !== undefined
+                                ? todayWeight.toFixed(1)
+                                : "--"}
                         </Typography>
                         <Typography
                             fontSize={14}
@@ -111,7 +116,7 @@ const WeightRecord_SummaryCard = () => {
                             fontWeight={700}
                             color="#9E8DFF"
                         >
-                            {targetWeight.toFixed(1)}
+                            {targetWeight ? targetWeight.toFixed(1) : "--"}
                         </Typography>
                         <Typography
                             fontSize={14}
