@@ -1,4 +1,3 @@
-// components/record/meal/input/name/MealInputName_SearchBar.tsx
 "use client";
 
 import { Box, Autocomplete, TextField } from "@mui/material";
@@ -6,7 +5,17 @@ import { useState } from "react";
 import axios from "axios";
 import { useMealNameSearchStore } from "@/app/store/useMealNameSearchStore";
 
-// ✅ 자동완성 옵션 리스트 (mock)
+// ✅ 응답 아이템 타입 정의
+interface FoodApiItem {
+    name: string;
+    mass: number;
+    calorie: number;
+    carbohydrate: number;
+    protein: number;
+    fat: number;
+}
+
+// ✅ 자동완성 옵션 리스트 (임시 mock)
 const allFoodNames = [
     "순두부찌개",
     "공기밥",
@@ -41,10 +50,24 @@ const MealInputName_SearchBar = () => {
         if (!searchWord.trim()) return;
 
         try {
-            const res = await axios.get("/api/mock/photo-foods"); // mock API 호출
-            setSearchResults(res.data.foods);
-            setKeyword(searchWord); // 상태에 검색어 저장
-            addRecentKeyword(searchWord); // 최근 검색어 추가
+            const res = await axios.get(
+                `https://api.eatfit.site/api/core/food?name=${encodeURIComponent(
+                    searchWord
+                )}`
+            );
+
+            const converted = (res.data.data as FoodApiItem[]).map(item => ({
+                name: item.name,
+                weight: `${item.mass}g`,
+                calorie: item.calorie,
+                carbs: item.carbohydrate,
+                protein: item.protein,
+                fat: item.fat,
+            }));
+
+            setSearchResults(converted);
+            setKeyword(searchWord);
+            addRecentKeyword(searchWord);
         } catch (error) {
             console.error("📛 검색 실패", error);
         }
@@ -56,18 +79,12 @@ const MealInputName_SearchBar = () => {
                 freeSolo
                 options={allFoodNames}
                 inputValue={inputValue}
-                onInputChange={(event, newValue) => {
-                    setInputValue(newValue);
-                }}
-                onChange={(event, newValue) => {
-                    if (typeof newValue === "string") {
-                        handleSearch(newValue); // 선택 시 검색 실행
-                    }
+                onInputChange={(e, newValue) => setInputValue(newValue)}
+                onChange={(e, newValue) => {
+                    if (typeof newValue === "string") handleSearch(newValue);
                 }}
                 onKeyDown={e => {
-                    if (e.key === "Enter") {
-                        handleSearch(inputValue);
-                    }
+                    if (e.key === "Enter") handleSearch(inputValue);
                 }}
                 renderInput={params => (
                     <TextField
@@ -75,15 +92,11 @@ const MealInputName_SearchBar = () => {
                         placeholder="음식을 검색하세요"
                         fullWidth
                         sx={{
-                            // 기본 상태
                             "& .MuiOutlinedInput-root": {
                                 borderRadius: "12px",
-                                "& fieldset": {
-                                    borderColor: "#E0E0E0", // 🩶 기본 테두리
-                                },
-                                // 포커스 됐을 때
+                                "& fieldset": { borderColor: "#E0E0E0" },
                                 "&.Mui-focused fieldset": {
-                                    borderColor: "#12C08D", // ✅ 초록 테두리
+                                    borderColor: "#12C08D",
                                     borderWidth: "1.5px",
                                 },
                             },

@@ -10,11 +10,13 @@ import {
     InputAdornment,
     Slide,
 } from "@mui/material";
+import axiosInstance from "@/app/lib/axiosInstance";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 
 const NutritionPlan_TargetWeightEditor = () => {
     const [open, setOpen] = useState(false);
 
+    // 상태 가져오기 (Zustand)
     const targetWeight = useNutritionPlanStore(state => state.targetWeight);
     const updateTargetWeight = useNutritionPlanStore(
         state => state.updateTargetWeight
@@ -23,22 +25,39 @@ const NutritionPlan_TargetWeightEditor = () => {
     const [inputValue, setInputValue] = useState(targetWeight.toString());
 
     const handleOpen = () => {
-        setInputValue(targetWeight.toString());
+        setInputValue(targetWeight.toString()); // 초기값 설정
         setOpen(true);
     };
 
     const handleClose = () => setOpen(false);
 
-    const handleSubmit = () => {
+    // ✅ 목표 체중 수정 처리 (상태 + API)
+    const handleSubmit = async () => {
         const value = parseFloat(inputValue);
         if (!isNaN(value)) {
-            updateTargetWeight(value); // ✅ 한 번에 처리
-            setOpen(false);
+            updateTargetWeight(value); // Zustand 상태 업데이트
+
+            try {
+                // 🔄 PATCH API 요청
+                await axiosInstance.patch(
+                    "https://api.eatfit.site/api/core/users/goal-weight",
+                    {
+                        goalWeight: value,
+                    }
+                );
+                console.log("✅ 목표 체중 수정 성공");
+            } catch (error) {
+                console.error("❌ 목표 체중 수정 실패", error);
+                alert("목표 체중 저장 중 오류가 발생했어요.");
+            }
+
+            setOpen(false); // 모달 닫기
         }
     };
 
     return (
         <section className="w-full px-4 flex flex-col items-center">
+            {/* 설명 텍스트 */}
             <Typography
                 sx={{
                     fontSize: 16,
@@ -61,6 +80,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                 설정 후 목표를 이룰 수 있도록 도울게요!
             </Typography>
 
+            {/* 현재 목표 표시 + 버튼 */}
             <Box
                 sx={{
                     width: "312px",
@@ -74,6 +94,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                     backgroundColor: "#fff",
                 }}
             >
+                {/* 왼쪽 텍스트 */}
                 <Typography
                     sx={{
                         fontSize: 14,
@@ -85,6 +106,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                     목표 몸무게
                 </Typography>
 
+                {/* 오른쪽 값 + 버튼 */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Typography
                         sx={{
@@ -131,6 +153,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                 </Box>
             </Box>
 
+            {/* 모달 */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -152,6 +175,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                             outline: "none",
                         }}
                     >
+                        {/* 핸들바 */}
                         <Box
                             sx={{
                                 width: 37,
@@ -163,6 +187,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                             }}
                         />
 
+                        {/* 제목 */}
                         <Typography
                             sx={{
                                 fontSize: 16,
@@ -174,6 +199,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                             목표 몸무게를 수정하세요
                         </Typography>
 
+                        {/* 입력 필드 */}
                         <TextField
                             variant="standard"
                             type="number"
@@ -219,6 +245,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                             }}
                         />
 
+                        {/* 설정 버튼 */}
                         <Button
                             onClick={handleSubmit}
                             fullWidth

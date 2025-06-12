@@ -4,62 +4,62 @@ import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import { useMealHistoryStore } from "@/app/store/useMealHistoryStore";
+import axiosInstance from "@/app/lib/axiosInstance";
 
-// 각 요일별 데이터 구조
 interface WeeklyKcalItem {
     dayLabel: string;
     kcal: number;
 }
 
+interface DietRecord {
+    date: string; // YYYY-MM-DD
+    calorie: number;
+}
+
 const Dashboard_HealthReport = () => {
     const router = useRouter();
-    const { historyList, setHistoryList } = useMealHistoryStore();
-
     const [weeklyKcal, setWeeklyKcal] = useState<WeeklyKcalItem[]>([]);
 
-    // ✅ 최초 mock 데이터 fetch → zustand 저장
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await fetch("/api/mock/history-meal");
-            const data = await res.json();
-            setHistoryList(data.history);
+        const fetchDietRecords = async () => {
+            try {
+                const res = await axiosInstance.get(
+                    "https://api.eatfit.site/api/core/dietrecord"
+                );
+                const records: DietRecord[] = res.data.data;
+
+                // 날짜별로 총합 칼로리 계산
+                const grouped = records.reduce<Record<string, number>>(
+                    (acc, cur) => {
+                        const date = cur.date;
+                        const kcal = cur.calorie || 0;
+                        acc[date] = (acc[date] || 0) + kcal;
+                        return acc;
+                    },
+                    {}
+                );
+
+                const startOfWeek = dayjs().startOf("week"); // 일요일
+                const days = ["일", "월", "화", "수", "목", "금", "토"];
+                const result: WeeklyKcalItem[] = [];
+
+                for (let i = 0; i < 7; i++) {
+                    const date = startOfWeek.add(i, "day").format("YYYY-MM-DD");
+                    const kcal = grouped[date] || 0;
+                    result.push({ dayLabel: days[i], kcal });
+                }
+
+                setWeeklyKcal(result);
+            } catch (error) {
+                console.error("🥲 식단 기록 불러오기 실패", error);
+            }
         };
-        fetchData();
-    }, [setHistoryList]);
 
-    // ✅ 요일별 총 섭취 칼로리 계산
-    useEffect(() => {
-        const startOfWeek = dayjs().startOf("week"); // 일요일 기준
-        const days = ["일", "월", "화", "수", "목", "금", "토"];
-        const result: WeeklyKcalItem[] = [];
-
-        for (let i = 0; i < 7; i++) {
-            const date = startOfWeek.add(i, "day").format("YYYY-MM-DD");
-            const dayLabel = days[i];
-
-            const entry = historyList.find(item => item.date === date);
-            const kcal = entry
-                ? entry.meals.reduce(
-                      (sum, meal) =>
-                          sum +
-                          meal.foods.reduce(
-                              (acc, food) => acc + food.calorie,
-                              0
-                          ),
-                      0
-                  )
-                : 0;
-
-            result.push({ dayLabel, kcal });
-        }
-
-        setWeeklyKcal(result);
-    }, [historyList]);
+        fetchDietRecords();
+    }, []);
 
     return (
         <section className="w-full px-4 pt-4 flex flex-col items-center">
-            {/* 🔸 건강 리포트 카드 */}
             <Box
                 sx={{
                     width: "312px",
@@ -75,7 +75,6 @@ const Dashboard_HealthReport = () => {
                     justifyContent: "space-between",
                 }}
             >
-                {/* 🔹 제목 */}
                 <Typography
                     sx={{
                         fontSize: "14px",
@@ -87,7 +86,6 @@ const Dashboard_HealthReport = () => {
                     {"<건강 리포트>"}
                 </Typography>
 
-                {/* 🔹 요일별 막대 그래프 */}
                 <Box
                     sx={{
                         display: "flex",
@@ -100,7 +98,7 @@ const Dashboard_HealthReport = () => {
                     }}
                 >
                     {weeklyKcal.map(({ dayLabel, kcal }, i) => {
-                        const safeKcal = kcal ?? 0; // 혹시 모를 undefined 대비
+                        const safeKcal = kcal ?? 0;
                         const barHeight = Math.min(safeKcal / 30, 80);
                         const color = i % 2 === 0 ? "#15B493" : "#7C69EF";
 
@@ -149,7 +147,6 @@ const Dashboard_HealthReport = () => {
                     })}
                 </Box>
 
-                {/* 🔹 하단 멘트 */}
                 <Typography
                     sx={{
                         fontSize: "13px",
@@ -163,7 +160,6 @@ const Dashboard_HealthReport = () => {
                 </Typography>
             </Box>
 
-            {/* 🔹 자세히 보기 버튼 */}
             <Box sx={{ width: "312px", textAlign: "right", mt: "4px" }}>
                 <Button
                     onClick={() => router.push("/report")}

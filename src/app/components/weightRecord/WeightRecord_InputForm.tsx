@@ -12,6 +12,7 @@ import {
 import { IoScale } from "react-icons/io5";
 import { useWeightStore } from "@/app/store/useWeightStore";
 import { useEffect, useMemo, useState } from "react";
+import axiosInstance from "@/app/lib/axiosInstance";
 
 const WeightRecord_InputForm = () => {
     const selectedDate = useWeightStore(state => state.selectedDate);
@@ -33,16 +34,37 @@ const WeightRecord_InputForm = () => {
         setInput(defaultValue?.toString() || "");
     }, [defaultValue, selectedDate]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const numeric = parseFloat(weight);
         if (isNaN(numeric)) return;
-        setWeight(selectedDate, numeric);
 
-        // ✅ 입력한 날짜 기준으로 주간 차트도 이동시키자!
-        setCenterDate(selectedDate);
+        try {
+            if (defaultValue) {
+                // 🔁 수정 (PATCH)
+                await axiosInstance.patch("/api/core/users/weight", {
+                    id: defaultValue.id,
+                    weight: numeric,
+                });
 
-        setOpenSnackbar(true);
-        setTimeout(() => setIsEditing(false), 500);
+                // ✅ 상태 업데이트
+                setWeight(selectedDate, numeric, defaultValue.id);
+            } else {
+                // 🆕 새로 기록 (POST)
+                const res = await axiosInstance.post("/api/core/users/weight", {
+                    weight: numeric,
+                    date: selectedDate.format("YYYY-MM-DD"),
+                });
+
+                const newId = res.data.data?.id ?? Date.now(); // 안전하게 id 가져오기
+                setWeight(selectedDate, numeric, newId);
+            }
+
+            setCenterDate(selectedDate);
+            setOpenSnackbar(true);
+            setTimeout(() => setIsEditing(false), 500);
+        } catch (error) {
+            console.error("체중 기록 저장 실패:", error);
+        }
     };
 
     return (

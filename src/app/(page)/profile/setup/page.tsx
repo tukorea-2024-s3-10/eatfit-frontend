@@ -53,10 +53,10 @@ const Page = () => {
 
                     <ProfileSetupSubmit
                         isValid={allInputsFilled}
-                        // onSubmit={() => {
-                        //     console.log("✅ 모든 정보 입력 완료!");
-                        //     console.log(useProfileSetupStore.getState()); // 전체 상태 확인
-                        // }}
+                        onSubmit={() => {
+                            console.log("✅ 모든 정보 입력 완료!");
+                            console.log(useProfileSetupStore.getState()); // 전체 상태 확인
+                        }}
                     />
                 </div>
             </div>
