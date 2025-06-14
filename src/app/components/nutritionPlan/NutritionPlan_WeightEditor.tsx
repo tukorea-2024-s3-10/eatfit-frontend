@@ -39,8 +39,8 @@ const NutritionPlan_TargetWeightEditor = () => {
 
             try {
                 // 🔄 PATCH API 요청
-                await axiosInstance.patch(
-                    "https://api.eatfit.site/api/core/users/goal-weight",
+                const res = await axiosInstance.post(
+                    "/api/core/users/goal-weight",
                     {
                         goalWeight: value,
                     }

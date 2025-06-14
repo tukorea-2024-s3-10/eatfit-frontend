@@ -15,12 +15,14 @@ interface MealNameSearchState {
     recentKeywords: string[];
     searchResults: FoodInfo[];
     selectedFoods: FoodInfo[];
+    showRecentKeywords: boolean;
 
     setKeyword: (value: string) => void;
     addRecentKeyword: (value: string) => void;
     deleteRecentKeyword: (value: string) => void;
     setSearchResults: (foods: FoodInfo[]) => void;
     setSelectedFood: (food: FoodInfo) => void;
+    setShowRecentKeywords: (show: boolean) => void;
 
     addSelectedFood: (food: FoodInfo) => void;
     removeSelectedFood: (foodName: string) => void;
@@ -35,6 +37,7 @@ export const useMealNameSearchStore = create<MealNameSearchState>(
         recentKeywords: [],
         searchResults: [],
         selectedFoods: [],
+        showRecentKeywords: true,
 
         setKeyword: value => set({ keyword: value }),
 
@@ -89,5 +92,7 @@ export const useMealNameSearchStore = create<MealNameSearchState>(
                 searchResults: [],
                 selectedFoods: [],
             }),
+
+        setShowRecentKeywords: show => set({ showRecentKeywords: show }),
     })
 );

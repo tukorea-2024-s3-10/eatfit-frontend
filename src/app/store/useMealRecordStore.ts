@@ -30,6 +30,7 @@ interface MealRecordState {
     uploadedPhoto: string | null;
     photoFoodList: FoodInfo[];
     manualInput: ManualInput;
+    selectedFood: FoodInfo | null;
 
     selectTime: (label: MealTime) => void;
     selectMethod: (method: RecordMethod) => void;
@@ -38,6 +39,7 @@ interface MealRecordState {
     setUploadedPhoto: (base64: string) => void;
     setPhotoFoodList: (foods: FoodInfo[]) => void;
     setManualInput: (input: ManualInput) => void;
+    setSelectedFood: (food: FoodInfo | null) => void;
 
     resetMealData: () => void;
 }
@@ -54,6 +56,7 @@ export const useMealRecordStore = create<MealRecordState>((set, get) => ({
     uploadedPhoto: null,
     photoFoodList: [],
     manualInput: { name: "", calorie: 0, carbs: 0, protein: 0, fat: 0 },
+    selectedFood: null,
 
     selectTime: label => set({ selectedTime: label }),
     selectMethod: method => set({ selectedMethod: method }),
@@ -76,6 +79,8 @@ export const useMealRecordStore = create<MealRecordState>((set, get) => ({
 
     setManualInput: input => set({ manualInput: input }),
 
+    setSelectedFood: food => set({ selectedFood: food }),
+
     resetMealData: () => {
         const currentSelectedTime = get().selectedTime;
         set({
@@ -90,6 +95,7 @@ export const useMealRecordStore = create<MealRecordState>((set, get) => ({
             uploadedPhoto: null,
             photoFoodList: [],
             manualInput: { name: "", calorie: 0, carbs: 0, protein: 0, fat: 0 },
+            selectedFood: null,
         });
     },
 }));

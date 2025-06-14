@@ -16,16 +16,13 @@ const MyPage = () => {
             try {
                 const accessToken = localStorage.getItem("accessToken");
 
-                const res = await axiosInstance.get(
-                    "https://api.eatfit.site/api/core/users/profile",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                            "Content-Type": "application/json",
-                        },
-                        withCredentials: true,
-                    }
-                );
+                const res = await axiosInstance.get("/api/core/users/profile", {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                });
 
                 const {
                     name,

@@ -31,7 +31,7 @@ const Dashboard_CalorieSummary = () => {
         const fetchGoals = async () => {
             try {
                 const res = await axiosInstance.get(
-                    "https://api.eatfit.site/api/core/users/intake-goal"
+                    "/api/core/users/intake-goal"
                 );
                 const data = res.data.data;
                 setGoalsFromAPI(data);

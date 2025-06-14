@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import axios from "@/app/lib/axiosInstance";
+import axiosInstance from "@/app/lib/axiosInstance";
 import { useWeightStore } from "@/app/store/useWeightStore";
 import { Box } from "@mui/material";
 import WeightRecord_Header from "./WeightRecord_Header";
@@ -24,9 +24,7 @@ const WeightRecord_ChartView = () => {
     useEffect(() => {
         const fetchWeights = async () => {
             try {
-                const res = await axios.get(
-                    "https://api.eatfit.co.kr/api/core/users/weight"
-                );
+                const res = await axiosInstance.get("/api/core/users/weight");
                 const records: ApiWeightRecord[] = res.data.data;
 
                 const formatted: Record<

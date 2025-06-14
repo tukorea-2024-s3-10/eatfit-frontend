@@ -15,7 +15,7 @@ const NutritionPlan_RecommendedCalorie = () => {
         const fetchGoal = async () => {
             try {
                 const res = await axiosInstance.get(
-                    "https://api.eatfit.site/api/core/users/intake-goal"
+                    "/api/core/users/intake-goal"
                 );
 
                 const data = res.data?.data;

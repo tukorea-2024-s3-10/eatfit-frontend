@@ -20,16 +20,20 @@ const MealInputName_RecentKeywords = () => {
         deleteRecentKeyword,
         setSearchResults,
         setKeyword,
+        setShowRecentKeywords,
     } = useMealNameSearchStore();
 
-    const handleClick = async (keyword: string) => {
+    const handleKeywordClick = (keyword: string) => {
         setKeyword(keyword);
+        setShowRecentKeywords(false);
+    };
+
+    const handleClick = async (keyword: string) => {
+        handleKeywordClick(keyword);
 
         try {
             const res = await axiosInstance.get(
-                `https://api.eatfit.site/api/core/food?name=${encodeURIComponent(
-                    keyword
-                )}`
+                `/api/core/food?name=${encodeURIComponent(keyword)}`
             );
 
             const converted = (res.data.data as FoodApiItem[]).map(item => ({

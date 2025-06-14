@@ -43,24 +43,16 @@ const NutritionPlan_CalorieEditor = () => {
 
             // 🔄 PATCH API 연동
             try {
-                await axiosInstance.patch(
-                    "https://api.eatfit.site/api/core/users/intake-goal",
-                    {
-                        calorieGoal: calorieNumber,
-                        carbohydrateGoal: 0.5,
-                        proteinGoal: 0.3,
-                        fatGoal: 0.2,
-                        sodiumGoal: 2000,
-                        sugarGoal: 25,
-                        transFatGoal: 2,
-                        saturatedFatGoal: 20,
-                        cholesterolGoal: 300,
-                    }
-                );
+                await axiosInstance.post("/api/core/users/intake-goal", {
+                    calorieGoal: calorieNumber,
+                    carbohydrateGoal: Math.round((calorieNumber * 0.6) / 4),
+                    proteinGoal: Math.round((calorieNumber * 0.25) / 4),
+                    fatGoal: Math.round((calorieNumber * 0.15) / 9),
+                });
 
                 console.log("✅ 목표 칼로리 수정 성공");
-            } catch (err) {
-                console.error("❌ 목표 칼로리 수정 실패:", err);
+            } catch (error) {
+                console.error("칼로리 목표 저장 실패:", error);
                 alert("목표 칼로리 수정에 실패했습니다.");
             }
 
