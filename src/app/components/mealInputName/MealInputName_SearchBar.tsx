@@ -22,7 +22,8 @@ const MealInputName_SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const itemsPerPage = 5;
 
-    const { setSelectedFood } = useMealNameSearchStore();
+    const { setSelectedFood, setKeyword, addRecentKeyword } =
+        useMealNameSearchStore();
 
     const fetchFoods = async (search: string, pageNum: number) => {
         try {
@@ -55,14 +56,17 @@ const MealInputName_SearchBar = () => {
     };
 
     const handleFoodSelect = (food: FoodApiItem) => {
-        setSelectedFood({
+        const selectedFood = {
             name: food.name,
             weight: `${food.mass}g`,
             calorie: food.calorie,
             carbs: food.carbohydrate,
             protein: food.protein,
             fat: food.fat,
-        });
+        };
+        setSelectedFood(selectedFood);
+        setKeyword(food.name);
+        addRecentKeyword(food.name);
     };
 
     return (
