@@ -25,28 +25,23 @@ const MealInputName_SearchBar = () => {
     const { setSelectedFood, setKeyword, addRecentKeyword } =
         useMealNameSearchStore();
 
-    const fetchFoods = async (search: string, pageNum: number) => {
+    const fetchFoods = async (inputValue: string) => {
         try {
-            const res = await axiosInstance.get("/api/foods/search", {
-                params: {
-                    query: search,
-                    page: pageNum,
-                    size: itemsPerPage,
-                },
-            });
-
-            setSearchResults(res.data.data.items);
-            setTotalPages(Math.ceil(res.data.data.total / itemsPerPage));
+            const res = await axiosInstance.get(
+                `/api/core/food?name=${encodeURIComponent(inputValue)}`
+            );
+            return res.data;
         } catch (error) {
-            console.error("음식 검색 실패:", error);
+            console.error("음식 검색 중 오류 발생:", error);
+            return [];
         }
     };
 
     useEffect(() => {
         if (searchTerm) {
-            fetchFoods(searchTerm, page);
+            fetchFoods(searchTerm);
         }
-    }, [searchTerm, page]);
+    }, [searchTerm]);
 
     const handlePageChange = (
         event: React.ChangeEvent<unknown>,

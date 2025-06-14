@@ -56,10 +56,7 @@ const Report_Datagram = () => {
             setError(null);
 
             try {
-                const res = await axiosInstance.get(
-                    "https://eatfit-api.com/api/core/dietrecord"
-                );
-
+                const res = await axiosInstance.get("/api/core/dietrecord");
                 const rawData = res.data.data as {
                     date: string;
                     mealType: string;
@@ -146,8 +143,8 @@ const Report_Datagram = () => {
 
                 console.log("📊 주간 차트 데이터:", week);
                 setWeeklyData(week);
-            } catch (err) {
-                console.error("🥲 식단 기록 조회 실패", err);
+            } catch (error) {
+                console.error("❌ 식단 기록 불러오기 실패:", error);
                 setError("식단 데이터를 불러오는 데 실패했습니다.");
             } finally {
                 setLoading(false);

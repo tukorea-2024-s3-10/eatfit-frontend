@@ -30,8 +30,8 @@ const ProfileSetupSubmit = ({
             useProfileSetupStore.getState();
 
         try {
-            const response = await axiosInstance.patch(
-                "https://api.eatfit.site/api/core/users/profile",
+            const response = await axiosInstance.post(
+                "/api/core/users/profile",
                 {
                     name: nickname,
                     gender,
