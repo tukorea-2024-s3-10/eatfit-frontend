@@ -23,9 +23,7 @@ const Dashboard_HealthReport = () => {
     useEffect(() => {
         const fetchDietRecords = async () => {
             try {
-                const res = await axiosInstance.get(
-                    "https://api.eatfit.site/api/core/dietrecord"
-                );
+                const res = await axiosInstance.get("/api/core/dietrecord");
                 const records: DietRecord[] = res.data.data;
 
                 // 날짜별로 총합 칼로리 계산
@@ -56,6 +54,32 @@ const Dashboard_HealthReport = () => {
         };
 
         fetchDietRecords();
+    }, []);
+
+    useEffect(() => {
+        const fetchNutritionData = async () => {
+            try {
+                const res = await axiosInstance.get(
+                    "/api/users/me/nutrition/today"
+                );
+                const data = res.data.data;
+
+                // 필요한 데이터만 추출
+                const nutritionData = {
+                    calorie: data.calorie,
+                    carbs: data.carbohydratesG,
+                    fat: data.fatG,
+                    protein: data.proteinG,
+                };
+
+                // TODO: 상태 업데이트 로직 추가
+                console.log("오늘의 영양소 정보:", nutritionData);
+            } catch (error) {
+                console.error("영양소 정보 불러오기 실패:", error);
+            }
+        };
+
+        fetchNutritionData();
     }, []);
 
     return (

@@ -5,7 +5,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 const instance = axios.create({
-    // baseURL 제거!
+    baseURL: "https://api.eatfit.site",
     headers: {
         "Content-Type": "application/json",
     },

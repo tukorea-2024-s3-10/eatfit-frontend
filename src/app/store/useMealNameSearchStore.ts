@@ -20,6 +20,7 @@ interface MealNameSearchState {
     addRecentKeyword: (value: string) => void;
     deleteRecentKeyword: (value: string) => void;
     setSearchResults: (foods: FoodInfo[]) => void;
+    setSelectedFood: (food: FoodInfo) => void;
 
     addSelectedFood: (food: FoodInfo) => void;
     removeSelectedFood: (foodName: string) => void;
@@ -51,6 +52,17 @@ export const useMealNameSearchStore = create<MealNameSearchState>(
             })),
 
         setSearchResults: foods => set({ searchResults: foods }),
+
+        setSelectedFood: food => {
+            const alreadyExists = get().selectedFoods.some(
+                f => f.name === food.name
+            );
+            if (!alreadyExists) {
+                set(state => ({
+                    selectedFoods: [...state.selectedFoods, food],
+                }));
+            }
+        },
 
         addSelectedFood: food => {
             const alreadyExists = get().selectedFoods.some(

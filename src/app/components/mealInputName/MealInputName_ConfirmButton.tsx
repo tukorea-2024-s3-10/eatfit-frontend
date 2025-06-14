@@ -35,24 +35,21 @@ const MealInputName_ConfirmButton = () => {
         try {
             // ✅ 선택된 음식들을 각각 등록
             for (const food of selectedFoods) {
-                await axiosInstance.post(
-                    "https://api.eatfit.site/api/core/dietrecord",
-                    {
-                        date: today,
-                        mealType: selectedTime,
-                        foodName: food.name,
-                        mass: Number(food.weight.replace("g", "")) || 100,
-                        calorie: food.calorie,
-                        carbohydrate: food.carbs,
-                        sugar: 0.1,
-                        protein: food.protein,
-                        fat: food.fat,
-                        saturatedFat: 0.1,
-                        transFat: 0.0,
-                        sodiumGoal: 200,
-                        cholesterol: 180,
-                    }
-                );
+                await axiosInstance.post("/api/core/dietrecord", {
+                    date: today,
+                    mealType: selectedTime,
+                    foodName: food.name,
+                    mass: Number(food.weight.replace("g", "")) || 100,
+                    calorie: food.calorie,
+                    carbohydrate: food.carbs,
+                    sugar: 0.1,
+                    protein: food.protein,
+                    fat: food.fat,
+                    saturatedFat: 0.1,
+                    transFat: 0.0,
+                    sodiumGoal: 200,
+                    cholesterol: 180,
+                });
             }
 
             // ✅ NutritionPlanStore에 저장

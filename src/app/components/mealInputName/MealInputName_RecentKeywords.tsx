@@ -2,7 +2,7 @@
 
 import { Box, Chip, Typography } from "@mui/material";
 import { useMealNameSearchStore } from "@/app/store/useMealNameSearchStore";
-import axios from "axios";
+import axiosInstance from "@/app/lib/axiosInstance";
 
 // ✅ 여기서 바로 타입 정의
 interface FoodApiItem {
@@ -26,7 +26,7 @@ const MealInputName_RecentKeywords = () => {
         setKeyword(keyword);
 
         try {
-            const res = await axios.get(
+            const res = await axiosInstance.get(
                 `https://api.eatfit.site/api/core/food?name=${encodeURIComponent(
                     keyword
                 )}`

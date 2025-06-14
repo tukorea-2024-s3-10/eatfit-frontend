@@ -24,24 +24,21 @@ const MealInputManual_ConfirmButton = () => {
         try {
             const today = new Date().toISOString().slice(0, 10); // ex: "2025-06-07"
 
-            await axiosInstance.post(
-                "https://api.eatfit.site/api/core/dietrecord",
-                {
-                    date: today,
-                    mealType: selectedTime,
-                    foodName: manualInput.name,
-                    mass: 100, // ✳️ 입력 UI 없음 → 임시값
-                    calorie: manualInput.calorie,
-                    carbohydrate: manualInput.carbs,
-                    sugar: 0.1, // ✳️ 고정값 (UI 없음)
-                    protein: manualInput.protein,
-                    fat: manualInput.fat,
-                    saturatedFat: 0.1, // ✳️ 고정값 (UI 없음)
-                    transFat: 0.0,
-                    sodiumGoal: 200,
-                    cholesterol: 180,
-                }
-            );
+            await axiosInstance.post("/api/core/dietrecord", {
+                date: today,
+                mealType: selectedTime,
+                foodName: manualInput.name,
+                mass: 100, // ✳️ 입력 UI 없음 → 임시값
+                calorie: manualInput.calorie,
+                carbohydrate: manualInput.carbs,
+                sugar: 0.1, // ✳️ 고정값 (UI 없음)
+                protein: manualInput.protein,
+                fat: manualInput.fat,
+                saturatedFat: 0.1, // ✳️ 고정값 (UI 없음)
+                transFat: 0.0,
+                sodiumGoal: 200,
+                cholesterol: 180,
+            });
 
             // ✅ 상태 저장
             useNutritionPlanStore
