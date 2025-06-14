@@ -1,96 +1,111 @@
-// components/record/meal/input/name/MealInputName_SearchBar.tsx
 "use client";
 
-import { Box, Autocomplete, TextField } from "@mui/material";
-import { useState } from "react";
-import axios from "axios";
+import { Box, Autocomplete, TextField, Pagination } from "@mui/material";
+import { useState, useEffect } from "react";
+import axiosInstance from "@/app/lib/axiosInstance";
 import { useMealNameSearchStore } from "@/app/store/useMealNameSearchStore";
 
-// ✅ 자동완성 옵션 리스트 (mock)
-const allFoodNames = [
-    "순두부찌개",
-    "공기밥",
-    "김치찌개",
-    "된장국",
-    "불고기",
-    "비빔밥",
-    "삼겹살",
-    "떡볶이",
-    "라면",
-    "치킨",
-    "샐러드",
-    "스파게티",
-    "에너지바",
-    "햄버거",
-    "감자튀김",
-    "김밥",
-    "주스",
-    "우유",
-    "계란",
-    "사과",
-];
+// ✅ 응답 아이템 타입 정의
+interface FoodApiItem {
+    name: string;
+    mass: number;
+    calorie: number;
+    carbohydrate: number;
+    protein: number;
+    fat: number;
+}
 
 const MealInputName_SearchBar = () => {
-    const { setKeyword, addRecentKeyword, setSearchResults } =
+    const [searchResults, setSearchResults] = useState<FoodApiItem[]>([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
+    const itemsPerPage = 5;
+
+    const { setSelectedFood, setKeyword, addRecentKeyword } =
         useMealNameSearchStore();
 
-    const [inputValue, setInputValue] = useState("");
-
-    // 🔍 자동완성 선택 or 엔터 입력 시 검색 실행
-    const handleSearch = async (searchWord: string) => {
-        if (!searchWord.trim()) return;
-
+    const fetchFoods = async (search: string, pageNum: number) => {
         try {
-            const res = await axios.get("/api/mock/photo-foods"); // mock API 호출
-            setSearchResults(res.data.foods);
-            setKeyword(searchWord); // 상태에 검색어 저장
-            addRecentKeyword(searchWord); // 최근 검색어 추가
+            const res = await axiosInstance.get("/api/foods/search", {
+                params: {
+                    query: search,
+                    page: pageNum,
+                    size: itemsPerPage,
+                },
+            });
+
+            setSearchResults(res.data.data.items);
+            setTotalPages(Math.ceil(res.data.data.total / itemsPerPage));
         } catch (error) {
-            console.error("📛 검색 실패", error);
+            console.error("음식 검색 실패:", error);
         }
     };
 
+    useEffect(() => {
+        if (searchTerm) {
+            fetchFoods(searchTerm, page);
+        }
+    }, [searchTerm, page]);
+
+    const handlePageChange = (
+        event: React.ChangeEvent<unknown>,
+        value: number
+    ) => {
+        setPage(value);
+    };
+
+    const handleFoodSelect = (food: FoodApiItem) => {
+        const selectedFood = {
+            name: food.name,
+            weight: `${food.mass}g`,
+            calorie: food.calorie,
+            carbs: food.carbohydrate,
+            protein: food.protein,
+            fat: food.fat,
+        };
+        setSelectedFood(selectedFood);
+        setKeyword(food.name);
+        addRecentKeyword(food.name);
+    };
+
     return (
-        <Box sx={{ px: 2, pt: 2 }}>
+        <Box sx={{ width: "100%", p: 2 }}>
             <Autocomplete
                 freeSolo
-                options={allFoodNames}
-                inputValue={inputValue}
-                onInputChange={(event, newValue) => {
-                    setInputValue(newValue);
+                options={searchResults}
+                getOptionLabel={option =>
+                    typeof option === "string" ? option : option.name
+                }
+                onInputChange={(_, newValue) => {
+                    setSearchTerm(newValue);
+                    setPage(1);
                 }}
-                onChange={(event, newValue) => {
-                    if (typeof newValue === "string") {
-                        handleSearch(newValue); // 선택 시 검색 실행
-                    }
-                }}
-                onKeyDown={e => {
-                    if (e.key === "Enter") {
-                        handleSearch(inputValue);
+                onChange={(_, value) => {
+                    if (value && typeof value !== "string") {
+                        handleFoodSelect(value);
                     }
                 }}
                 renderInput={params => (
                     <TextField
                         {...params}
-                        placeholder="음식을 검색하세요"
+                        label="음식 검색"
+                        variant="outlined"
                         fullWidth
-                        sx={{
-                            // 기본 상태
-                            "& .MuiOutlinedInput-root": {
-                                borderRadius: "12px",
-                                "& fieldset": {
-                                    borderColor: "#E0E0E0", // 🩶 기본 테두리
-                                },
-                                // 포커스 됐을 때
-                                "&.Mui-focused fieldset": {
-                                    borderColor: "#12C08D", // ✅ 초록 테두리
-                                    borderWidth: "1.5px",
-                                },
-                            },
-                        }}
                     />
                 )}
             />
+
+            {searchResults.length > 0 && (
+                <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        color="primary"
+                    />
+                </Box>
+            )}
         </Box>
     );
 };

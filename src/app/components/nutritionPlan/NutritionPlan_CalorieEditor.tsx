@@ -10,18 +10,16 @@ import {
     InputAdornment,
     Slide,
 } from "@mui/material";
+import axiosInstance from "@/app/lib/axiosInstance";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 
 const NutritionPlan_CalorieEditor = () => {
-    const [open, setOpen] = useState(false); // 모달 상태
-
-    // Zustand 상태 불러오기
+    const [open, setOpen] = useState(false);
     const targetCalorie = useNutritionPlanStore(state => state.targetCalorie);
     const setTargetCalorie = useNutritionPlanStore(
         state => state.setTargetCalorie
     );
     const setMacros = useNutritionPlanStore(state => state.setMacros);
-
     const [inputValue, setInputValue] = useState(targetCalorie.toString());
 
     const handleOpen = () => {
@@ -31,18 +29,40 @@ const NutritionPlan_CalorieEditor = () => {
 
     const handleClose = () => setOpen(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const calorieNumber = parseFloat(inputValue);
+
         if (!isNaN(calorieNumber)) {
-            // 상태 업데이트
             setTargetCalorie(calorieNumber);
 
-            // 🔥 탄:단:지 비율 계산 후 상태 반영
-            const carbs = Math.round((calorieNumber * 0.5) / 4); // 탄수화물 g
-            const protein = Math.round((calorieNumber * 0.3) / 4); // 단백질 g
-            const fat = Math.round((calorieNumber * 0.2) / 9); // 지방 g
+            const carbs = Math.round((calorieNumber * 0.5) / 4);
+            const protein = Math.round((calorieNumber * 0.3) / 4);
+            const fat = Math.round((calorieNumber * 0.2) / 9);
 
             setMacros({ carbs, protein, fat });
+
+            // 🔄 PATCH API 연동
+            try {
+                await axiosInstance.patch(
+                    "https://api.eatfit.site/api/core/users/intake-goal",
+                    {
+                        calorieGoal: calorieNumber,
+                        carbohydrateGoal: 0.5,
+                        proteinGoal: 0.3,
+                        fatGoal: 0.2,
+                        sodiumGoal: 2000,
+                        sugarGoal: 25,
+                        transFatGoal: 2,
+                        saturatedFatGoal: 20,
+                        cholesterolGoal: 300,
+                    }
+                );
+
+                console.log("✅ 목표 칼로리 수정 성공");
+            } catch (err) {
+                console.error("❌ 목표 칼로리 수정 실패:", err);
+                alert("목표 칼로리 수정에 실패했습니다.");
+            }
 
             setOpen(false);
         }
@@ -50,7 +70,6 @@ const NutritionPlan_CalorieEditor = () => {
 
     return (
         <section className="w-full px-4 flex flex-col items-center">
-            {/* 메인 박스 */}
             <Box
                 sx={{
                     width: "312px",
@@ -63,7 +82,6 @@ const NutritionPlan_CalorieEditor = () => {
                     backgroundColor: "#fff",
                 }}
             >
-                {/* 왼쪽 라벨 */}
                 <Typography
                     sx={{
                         fontSize: 14,
@@ -75,7 +93,6 @@ const NutritionPlan_CalorieEditor = () => {
                     목표 칼로리
                 </Typography>
 
-                {/* 오른쪽: 값 + 버튼 */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Typography
                         sx={{
@@ -122,7 +139,6 @@ const NutritionPlan_CalorieEditor = () => {
                 </Box>
             </Box>
 
-            {/* 하단 안내 */}
             <Box sx={{ width: "312px", mt: 1 }}>
                 <Typography
                     sx={{
@@ -136,7 +152,6 @@ const NutritionPlan_CalorieEditor = () => {
                 </Typography>
             </Box>
 
-            {/* 모달 */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -158,7 +173,6 @@ const NutritionPlan_CalorieEditor = () => {
                             outline: "none",
                         }}
                     >
-                        {/* 핸들바 */}
                         <Box
                             sx={{
                                 width: 37,
@@ -170,7 +184,6 @@ const NutritionPlan_CalorieEditor = () => {
                             }}
                         />
 
-                        {/* 제목 */}
                         <Typography
                             sx={{
                                 fontSize: 16,
@@ -182,7 +195,6 @@ const NutritionPlan_CalorieEditor = () => {
                             목표 칼로리를 수정하세요
                         </Typography>
 
-                        {/* 입력 필드 */}
                         <TextField
                             variant="standard"
                             type="number"
@@ -228,7 +240,6 @@ const NutritionPlan_CalorieEditor = () => {
                             }}
                         />
 
-                        {/* 수정 버튼 */}
                         <Button
                             onClick={handleSubmit}
                             fullWidth

@@ -43,11 +43,11 @@ const Page = () => {
                     }}
                 >
                     <Image
-                        src="/food-placeholder.png" // 실제 이미지가 없다면 공통 placeholder
+                        src={item.imageUrl || "/food-placeholder.png"} // ✅ base64 이미지 우선 적용
                         alt={item.name}
                         width={72}
                         height={72}
-                        style={{ borderRadius: "8px" }}
+                        style={{ borderRadius: "8px", objectFit: "cover" }}
                     />
                     <Box>
                         <Typography fontWeight={600}>

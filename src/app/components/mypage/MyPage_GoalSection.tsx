@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 import { useState } from "react";
+import axiosInstance from "@/app/lib/axiosInstance";
 
 const MyPage_GoalSection = () => {
     const targetCalorie = useNutritionPlanStore(state => state.targetCalorie);
@@ -40,14 +41,49 @@ const MyPage_GoalSection = () => {
         setInputValue("");
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const parsed = parseFloat(inputValue);
         if (isNaN(parsed)) return;
 
-        if (openType === "calorie") setTargetCalorie(parsed);
-        if (openType === "weight") setTargetWeight(parsed);
+        try {
+            if (openType === "calorie") {
+                setTargetCalorie(parsed);
 
-        handleClose();
+                await axiosInstance.patch(
+                    "https://api.eatfit.site/api/core/users/intake-goal",
+                    {
+                        calorieGoal: parsed,
+                        proteinGoal: 90,
+                        fatGoal: 60,
+                        carbohydrateGoal: 210,
+                        sodiumGoal: 2300,
+                        sugarGoal: 30,
+                        transFatGoal: 2,
+                        saturatedFatGoal: 15,
+                        cholesterolGoal: 300,
+                    }
+                );
+
+                console.log("✅ 목표 칼로리 수정 완료");
+            }
+
+            if (openType === "weight") {
+                setTargetWeight(parsed);
+
+                await axiosInstance.patch(
+                    "https://api.eatfit.site/api/core/users/profile/target-weight",
+                    {
+                        targetWeight: parsed,
+                    }
+                );
+
+                console.log("✅ 목표 체중 수정 완료");
+            }
+
+            handleClose();
+        } catch (error) {
+            console.error("❌ 목표 수정 실패", error);
+        }
     };
 
     const unit = openType === "calorie" ? "Kcal" : "kg";

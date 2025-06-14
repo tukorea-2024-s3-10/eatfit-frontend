@@ -11,7 +11,6 @@ import ProfileSetupSubmit from "@/app/components/profileSetup/Profile_Setup_Subm
 import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
 
 const EditProfilePage = () => {
-    // ✅ Zustand 상태 가져오기
     const nickname = useProfileSetupStore(state => state.nickname);
     const gender = useProfileSetupStore(state => state.gender);
     const age = useProfileSetupStore(state => state.age);
@@ -20,7 +19,6 @@ const EditProfilePage = () => {
     const purpose = useProfileSetupStore(state => state.purpose);
     const diseases = useProfileSetupStore(state => state.diseases);
 
-    // ✅ 모든 항목이 채워졌는지 검사
     const allInputsFilled =
         !!nickname.trim() &&
         !!gender &&
@@ -28,6 +26,19 @@ const EditProfilePage = () => {
         !!height.trim() &&
         !!weight.trim() &&
         !!purpose;
+
+    const handleSubmit = () => {
+        console.log("✅ 수정된 프로필:", {
+            nickname,
+            gender,
+            age,
+            height,
+            weight,
+            purpose,
+            diseases,
+        });
+        // submit은 ProfileSetupSubmit 안에서 axios 요청함
+    };
 
     return (
         <div>
@@ -44,17 +55,7 @@ const EditProfilePage = () => {
                     isValid={allInputsFilled}
                     buttonText="수정 완료"
                     redirectTo="/mypage"
-                    onSubmit={() => {
-                        console.log("✅ 수정된 프로필:", {
-                            nickname,
-                            gender,
-                            age,
-                            height,
-                            weight,
-                            purpose,
-                            diseases,
-                        });
-                    }}
+                    onSubmit={handleSubmit}
                 />
             </div>
         </div>

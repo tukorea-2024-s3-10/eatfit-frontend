@@ -4,6 +4,7 @@ import { Box, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useMealRecordStore } from "@/app/store/useMealRecordStore";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
+import axiosInstance from "@/app/lib/axiosInstance"; // ✅ axiosInstance 사용
 
 const MealInputManual_ConfirmButton = () => {
     const router = useRouter();
@@ -12,41 +13,52 @@ const MealInputManual_ConfirmButton = () => {
     const updateKcal = useMealRecordStore(state => state.updateKcal);
     const manualInput = useMealRecordStore(state => state.manualInput);
 
-    // ✅ 디버깅용 로그
-    console.log("🧪 확인용 상태:", {
-        name: manualInput.name,
-        calorie: manualInput.calorie,
-        typeofCalorie: typeof manualInput.calorie,
-        selectedTime,
-    });
-
-    // ✅ 비활성화 조건 → string이면 숫자로 변환해서 비교!
     const isDisabled =
         !manualInput.name.trim() ||
         Number(manualInput.calorie) <= 0 ||
         !selectedTime;
 
-    // ✅ 등록 버튼 클릭 핸들러
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (isDisabled || !selectedTime) return;
 
-        // ✅ NutritionPlan에 저장
-        useNutritionPlanStore
-            .getState()
-            .setTargetCalorie(Number(manualInput.calorie));
-        useNutritionPlanStore.getState().setMacros({
-            carbs: Number(manualInput.carbs),
-            protein: Number(manualInput.protein),
-            fat: Number(manualInput.fat),
-        });
+        try {
+            const today = new Date().toISOString().slice(0, 10); // ex: "2025-06-07"
 
-        // ✅ MealRecord에 kcal 저장
-        updateKcal(selectedTime, Number(manualInput.calorie));
+            await axiosInstance.post("/api/core/dietrecord", {
+                date: today,
+                mealType: selectedTime,
+                foodName: manualInput.name,
+                mass: 100, // ✳️ 입력 UI 없음 → 임시값
+                calorie: manualInput.calorie,
+                carbohydrate: manualInput.carbs,
+                sugar: 0.1, // ✳️ 고정값 (UI 없음)
+                protein: manualInput.protein,
+                fat: manualInput.fat,
+                saturatedFat: 0.1, // ✳️ 고정값 (UI 없음)
+                transFat: 0.0,
+                sodiumGoal: 200,
+                cholesterol: 180,
+            });
 
-        console.log("✅ 저장 완료!", manualInput);
+            // ✅ 상태 저장
+            useNutritionPlanStore
+                .getState()
+                .setTargetCalorie(Number(manualInput.calorie));
+            useNutritionPlanStore.getState().setMacros({
+                carbs: Number(manualInput.carbs),
+                protein: Number(manualInput.protein),
+                fat: Number(manualInput.fat),
+            });
 
-        // ✅ 다음 페이지 이동
-        router.push("/record/meal/loading");
+            updateKcal(selectedTime, Number(manualInput.calorie));
+
+            console.log("✅ 저장 및 API 등록 완료!", manualInput);
+
+            router.push("/record/meal/loading");
+        } catch (error) {
+            console.error("❌ 식단 등록 실패:", error);
+            alert("식단 등록 중 문제가 발생했어요!");
+        }
     };
 
     return (

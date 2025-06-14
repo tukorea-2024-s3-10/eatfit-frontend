@@ -10,36 +10,54 @@ import {
     InputAdornment,
     Slide,
 } from "@mui/material";
+import axiosInstance from "@/app/lib/axiosInstance";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 
 const NutritionPlan_TargetWeightEditor = () => {
-    const [open, setOpen] = useState(false); // 모달 열림 상태
+    const [open, setOpen] = useState(false);
 
+    // 상태 가져오기 (Zustand)
     const targetWeight = useNutritionPlanStore(state => state.targetWeight);
-    const setTargetWeight = useNutritionPlanStore(
-        state => state.setTargetWeight
+    const updateTargetWeight = useNutritionPlanStore(
+        state => state.updateTargetWeight
     );
 
-    const [inputValue, setInputValue] = useState(targetWeight.toString()); // 입력값 상태
+    const [inputValue, setInputValue] = useState(targetWeight.toString());
 
     const handleOpen = () => {
-        setInputValue(targetWeight.toString());
+        setInputValue(targetWeight.toString()); // 초기값 설정
         setOpen(true);
     };
 
     const handleClose = () => setOpen(false);
 
-    const handleSubmit = () => {
+    // ✅ 목표 체중 수정 처리 (상태 + API)
+    const handleSubmit = async () => {
         const value = parseFloat(inputValue);
         if (!isNaN(value)) {
-            setTargetWeight(value);
-            setOpen(false);
+            updateTargetWeight(value); // Zustand 상태 업데이트
+
+            try {
+                // 🔄 PATCH API 요청
+                await axiosInstance.patch(
+                    "https://api.eatfit.site/api/core/users/goal-weight",
+                    {
+                        goalWeight: value,
+                    }
+                );
+                console.log("✅ 목표 체중 수정 성공");
+            } catch (error) {
+                console.error("❌ 목표 체중 수정 실패", error);
+                alert("목표 체중 저장 중 오류가 발생했어요.");
+            }
+
+            setOpen(false); // 모달 닫기
         }
     };
 
     return (
-        <section className="w-full px-4  flex flex-col items-center">
-            {/* 상단 안내 문구 */}
+        <section className="w-full px-4 flex flex-col items-center">
+            {/* 설명 텍스트 */}
             <Typography
                 sx={{
                     fontSize: 16,
@@ -62,7 +80,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                 설정 후 목표를 이룰 수 있도록 도울게요!
             </Typography>
 
-            {/* 입력 박스 */}
+            {/* 현재 목표 표시 + 버튼 */}
             <Box
                 sx={{
                     width: "312px",
@@ -76,7 +94,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                     backgroundColor: "#fff",
                 }}
             >
-                {/* 왼쪽 라벨 */}
+                {/* 왼쪽 텍스트 */}
                 <Typography
                     sx={{
                         fontSize: 14,
@@ -88,14 +106,8 @@ const NutritionPlan_TargetWeightEditor = () => {
                     목표 몸무게
                 </Typography>
 
-                {/* 몸무게 수치 + 버튼 */}
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
+                {/* 오른쪽 값 + 버튼 */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Typography
                         sx={{
                             fontSize: 20,
@@ -175,7 +187,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                             }}
                         />
 
-                        {/* 모달 타이틀 */}
+                        {/* 제목 */}
                         <Typography
                             sx={{
                                 fontSize: 16,
@@ -233,7 +245,7 @@ const NutritionPlan_TargetWeightEditor = () => {
                             }}
                         />
 
-                        {/* 수정 버튼 */}
+                        {/* 설정 버튼 */}
                         <Button
                             onClick={handleSubmit}
                             fullWidth

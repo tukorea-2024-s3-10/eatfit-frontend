@@ -1,4 +1,3 @@
-// app/(page)/history/meal/page.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -8,15 +7,24 @@ import HistoryMeal_DateNavigator from "@/app/components/historyMeal/HistoryMeal_
 import HistoryMeal_List from "@/app/components/historyMeal/HistoryMeal_List";
 import HistoryMeal_FoodList from "@/app/components/historyMeal/HistoryMeal_FoodList";
 import HistoryMeal_ConfirmButton from "@/app/components/historyMeal/HistoryMeal_ConfirmButton";
+import axiosInstance from "@/app/lib/axiosInstance"; // ✅ axios 인스턴스 사용한다고 했으니 이걸로
+
 const Page = () => {
     const setHistoryList = useMealHistoryStore(state => state.setHistoryList);
 
-    // ✅ 전체 mock 데이터 1번만 가져오기
     useEffect(() => {
         const fetchAllHistory = async () => {
-            const res = await fetch("/api/mock/history-meal");
-            const data = await res.json();
-            setHistoryList(data.history); // ✅ 전체 리스트 저장
+            try {
+                const res = await axiosInstance.get("/api/core/dietrecord");
+                const data = res.data;
+
+                if (data?.data) {
+                    // ✅ 실제 데이터를 상태에 저장
+                    setHistoryList(data.data);
+                }
+            } catch (error) {
+                console.error("식단 기록 조회 실패", error);
+            }
         };
 
         fetchAllHistory();

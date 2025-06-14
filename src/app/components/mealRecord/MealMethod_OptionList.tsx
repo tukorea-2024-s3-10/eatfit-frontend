@@ -6,7 +6,14 @@ import MealMethod_Option from "./MealMethod_Option";
 
 const MealMethod_OptionList = () => {
     return (
-        <Box sx={{ px: 2 }}>
+        <Box
+            sx={{
+                px: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center", // ⬅️ 가운데 정렬!
+            }}
+        >
             {/* 📸 사진으로 등록 */}
             <MealMethod_Option
                 imageSrc="/RecordMeal_Photo.svg"

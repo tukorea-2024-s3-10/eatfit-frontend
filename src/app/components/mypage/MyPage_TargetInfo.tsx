@@ -9,18 +9,17 @@ const MyPage_TargetInfo = () => {
 
     return (
         <Box px={3} pt={2}>
-            {/* 목표 칼로리 */}
+            {/* 목표 몸무게 */}
             <Box
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
                 py={1.5}
-                borderBottom="1px solid #E0E0E0"
             >
-                <Typography fontSize={14}>목표 칼로리</Typography>
+                <Typography fontSize={14}>목표 몸무게</Typography>
                 <Box display="flex" alignItems="center" gap={1}>
                     <Typography fontSize={16} fontWeight={700} color="#00A982">
-                        {targetCalorie.toLocaleString()} Kcal
+                        {targetWeight.toFixed(1)} kg
                     </Typography>
                     <Button
                         size="small"
@@ -38,18 +37,18 @@ const MyPage_TargetInfo = () => {
                     </Button>
                 </Box>
             </Box>
-
-            {/* 목표 몸무게 */}
+            {/* 목표 칼로리 */}
             <Box
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
                 py={1.5}
+                borderBottom="1px solid #E0E0E0"
             >
-                <Typography fontSize={14}>목표 몸무게</Typography>
+                <Typography fontSize={14}>목표 칼로리</Typography>
                 <Box display="flex" alignItems="center" gap={1}>
                     <Typography fontSize={16} fontWeight={700} color="#00A982">
-                        {targetWeight.toFixed(1)} kg
+                        {targetCalorie.toLocaleString()} Kcal
                     </Typography>
                     <Button
                         size="small"
