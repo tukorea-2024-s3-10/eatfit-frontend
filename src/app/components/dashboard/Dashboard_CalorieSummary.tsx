@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -15,6 +15,34 @@ import axiosInstance from "@/app/lib/axiosInstance";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard_CalorieSummary = () => {
+    
+    // 새로 추가된 부분 (시작)
+    const [todayNutrition, setTodayNutrition] = useState({
+        calorie: 0,
+        carbs: 0,
+        protein: 0,
+        fat: 0,
+    });
+
+    useEffect(() => {
+        const fetchTodayNutrition = async () => {
+            try {
+                const res = await axiosInstance.get("/api/users/me/nutrition/today");
+                const data = res.data.data;
+                setTodayNutrition({
+                    calorie: data.calorie,
+                    carbs: data.carbohydratesG,
+                    protein: data.proteinG,
+                    fat: data.fatG,
+                });
+            } catch (err) {
+                console.error("당일 섭취량 조회 오류", err);
+            }
+        };
+        fetchTodayNutrition();
+    }, []);
+    // 새로 추가된 부분 (끝)
+
     // Zustand에서 값 불러오기
     const targetCalorie = useNutritionPlanStore(state => state.targetCalorie);
     const carbs = useNutritionPlanStore(state => state.carbs);
@@ -43,9 +71,6 @@ const Dashboard_CalorieSummary = () => {
         fetchGoals();
     }, [setGoalsFromAPI]);
 
-    // 🔹 현재 칼로리 (예시값, 추후 식단 API 연동 예정)
-    const currentCalorie = 835;
-
     // 오늘 날짜 포맷
     const today = new Date();
     const formattedDate = `${(today.getMonth() + 1)
@@ -57,8 +82,8 @@ const Dashboard_CalorieSummary = () => {
         datasets: [
             {
                 data: [
-                    currentCalorie,
-                    Math.max(targetCalorie - currentCalorie, 0),
+                    todayNutrition.calorie,
+                    Math.max(targetCalorie - todayNutrition.calorie, 0),
                 ],
                 backgroundColor: ["#15B493", "#9BE8D8"],
                 borderWidth: 0,
@@ -142,7 +167,7 @@ const Dashboard_CalorieSummary = () => {
                                 color: "#2F3033",
                             }}
                         >
-                            {currentCalorie} Kcal
+                            {todayNutrition.calorie} Kcal
                         </Typography>
                         <Typography
                             sx={{
@@ -192,9 +217,9 @@ const Dashboard_CalorieSummary = () => {
                     }}
                 >
                     {[
-                        { label: "탄수화물", value: carbs },
-                        { label: "단백질", value: protein },
-                        { label: "지방", value: fat },
+                        { label: "탄수화물", value: todayNutrition.carbs },
+                        { label: "단백질", value: todayNutrition.protein },
+                        { label: "지방", value: todayNutrition.fat },
                     ].map(nutrient => (
                         <Box key={nutrient.label} sx={{ textAlign: "center" }}>
                             <Typography
