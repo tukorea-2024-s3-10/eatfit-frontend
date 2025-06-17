@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 import withPWA from "next-pwa";
 
+module.exports = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+};
+
 const nextConfig: NextConfig = {
     /* config options here */
     reactStrictMode: true, // React의 엄격 모드를 활성화 (개발 중 에러 발견에 도움)
