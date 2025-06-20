@@ -59,7 +59,6 @@ instance.interceptors.request.use(
     },
     error => Promise.reject(error)
 );
-
 instance.interceptors.response.use(
     response => response,
     async error => {
@@ -67,7 +66,6 @@ instance.interceptors.response.use(
 
         if (
             error.response?.status === 401 &&
-            error.response?.data?.message === "access token expired" &&
             !originalRequest._retry
         ) {
             originalRequest._retry = true;
@@ -89,16 +87,22 @@ instance.interceptors.response.use(
                     const newToken = authHeader.split("Bearer ")[1];
                     localStorage.setItem("accessToken", newToken);
 
-                    originalRequest.headers = new AxiosHeaders({
+                    // 기존 요청에 새 토큰 적용
+                    originalRequest.headers = {
                         ...originalRequest.headers,
                         Authorization: `Bearer ${newToken}`,
-                    });
+                    };
 
                     return instance(originalRequest);
                 } else {
-                    throw new Error("Authorization 헤더 형식 오류");
+                    console.error("❌ 재발급 응답에 Authorization 헤더가 없습니다.");
+                    // 토큰 파싱 실패 시 로그아웃 처리
+                    localStorage.removeItem("accessToken");
+                    window.location.href = "/login";
+                    return Promise.reject(new Error("재로그인이 필요합니다."));
                 }
             } catch (reissueError) {
+                console.error("❌ accessToken 재발급 요청 실패", reissueError);
                 localStorage.removeItem("accessToken");
                 window.location.href = "/login";
                 return Promise.reject(reissueError);
@@ -108,5 +112,6 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
 
 export default instance;
