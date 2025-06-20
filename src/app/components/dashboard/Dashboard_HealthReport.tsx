@@ -19,6 +19,7 @@ interface DietRecord {
 const Dashboard_HealthReport = () => {
     const router = useRouter();
     const [weeklyKcal, setWeeklyKcal] = useState<WeeklyKcalItem[]>([]);
+    const [feedbackText, setFeedbackText] = useState<string>("");
 
     useEffect(() => {
         const fetchDietRecords = async () => {
@@ -26,7 +27,6 @@ const Dashboard_HealthReport = () => {
                 const res = await axiosInstance.get("/api/core/dietrecord");
                 const records: DietRecord[] = res.data.data;
 
-                // 날짜별로 총합 칼로리 계산
                 const grouped = records.reduce<Record<string, number>>(
                     (acc, cur) => {
                         const date = cur.date;
@@ -37,7 +37,7 @@ const Dashboard_HealthReport = () => {
                     {}
                 );
 
-                const startOfWeek = dayjs().startOf("week"); // 일요일
+                const startOfWeek = dayjs().startOf("week");
                 const days = ["일", "월", "화", "수", "목", "금", "토"];
                 const result: WeeklyKcalItem[] = [];
 
@@ -63,8 +63,6 @@ const Dashboard_HealthReport = () => {
                     "/api/users/me/nutrition/today"
                 );
                 const data = res.data.data;
-
-                // 필요한 데이터만 추출
                 const nutritionData = {
                     calorie: data.calorie,
                     carbs: data.carbohydratesG,
@@ -72,7 +70,6 @@ const Dashboard_HealthReport = () => {
                     protein: data.proteinG,
                 };
 
-                // TODO: 상태 업데이트 로직 추가
                 console.log("오늘의 영양소 정보:", nutritionData);
             } catch (error) {
                 console.error("영양소 정보 불러오기 실패:", error);
@@ -80,6 +77,21 @@ const Dashboard_HealthReport = () => {
         };
 
         fetchNutritionData();
+    }, []);
+
+    useEffect(() => {
+        const fetchFeedback = async () => {
+            try {
+                const res = await axiosInstance.get("/api/users/me/feedback");
+                const feedback: string = res.data.data.feedback;
+                setFeedbackText(feedback);
+            } catch (error) {
+                console.error("피드백 불러오기 실패:", error);
+                setFeedbackText("피드백 정보를 불러올 수 없습니다.");
+            }
+        };
+
+        fetchFeedback();
     }, []);
 
     return (
@@ -180,7 +192,7 @@ const Dashboard_HealthReport = () => {
                         mt: 1,
                     }}
                 >
-                    이번주는 목표 칼로리를 잘 유지하고 있어요!
+                    {feedbackText}
                 </Typography>
             </Box>
 

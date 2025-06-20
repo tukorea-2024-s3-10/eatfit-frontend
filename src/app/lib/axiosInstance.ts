@@ -91,7 +91,7 @@ instance.interceptors.response.use(
                     originalRequest.headers = {
                         ...originalRequest.headers,
                         Authorization: `Bearer ${newToken}`,
-                    };
+                    };                                                                                                                                                                                                                                
 
                     return instance(originalRequest);
                 } else {
