@@ -8,31 +8,38 @@ import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
 const MyPage_ProfileCard = () => {
     const router = useRouter();
 
-    // 상태에서 유저 정보 불러오기 🎯
+    // ✅ Zustand에서 상태 불러오기
     const nickname = useProfileSetupStore(state => state.nickname);
     const age = useProfileSetupStore(state => state.age);
     const height = useProfileSetupStore(state => state.height);
     const weight = useProfileSetupStore(state => state.weight);
     const purpose = useProfileSetupStore(state => state.purpose);
     const diseases = useProfileSetupStore(state => state.diseases);
+    const profileImage = useProfileSetupStore(state => state.profileImage); // ✅ profileImage 사용
 
-    // 이미지 경로 지정 (기본값 포함)
+    // ✅ 목표 이미지 매핑
     const purposeImageMap: Record<string, string> = {
         헬스: "/perpose_helth.svg",
         다이어트: "/perpose_diet.svg",
         유지: "/perpose_normal.svg",
     };
 
-    const profileImage = "/sample-profile.jpg"; // 기본 이미지
+    const resolvedProfileImage = profileImage?.trim()
+        ? profileImage
+        : "/default-profile.png"; // 기본 프로필 이미지 처리
+
     const purposeImage = purpose
-        ? purposeImageMap[purpose]
-        : "/perpose_normal.svg";
+        ? purposeImageMap[purpose] || purposeImageMap["유지"]
+        : purposeImageMap["유지"];
 
     return (
         <Box px={3} pt={2}>
-            {/* 기본 프로필 */}
+            {/* 프로필 정보 */}
             <Box display="flex" alignItems="center" gap={2}>
-                <Avatar src={profileImage} sx={{ width: 56, height: 56 }} />
+                <Avatar
+                    src={resolvedProfileImage}
+                    sx={{ width: 56, height: 56 }}
+                />
                 <Box>
                     <Typography fontWeight={600}>
                         {nickname || "익명 사용자"}
@@ -55,11 +62,11 @@ const MyPage_ProfileCard = () => {
                 border="1px solid #E0E0E0"
                 borderRadius="8px"
             >
-                {/* 왼쪽: 목표 */}
+                {/* 목표 */}
                 <Box display="flex" flexDirection="column" alignItems="center">
                     <Image
                         src={purposeImage}
-                        alt="목표 아이콘"
+                        alt="목표 이미지"
                         width={32}
                         height={32}
                     />
@@ -68,7 +75,7 @@ const MyPage_ProfileCard = () => {
                     </Typography>
                 </Box>
 
-                {/* 오른쪽: 질병 */}
+                {/* 질병 */}
                 <Box textAlign="right">
                     <Typography fontSize={12} color="#999">
                         가지고 있는 질병
@@ -79,7 +86,7 @@ const MyPage_ProfileCard = () => {
                 </Box>
             </Box>
 
-            {/* 🔧 정보 수정하기 버튼 */}
+            {/* 수정 버튼 */}
             <Box mt={1.5} textAlign="right">
                 <Typography
                     fontSize={12}

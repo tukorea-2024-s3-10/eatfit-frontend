@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Collapse } from "@mui/material";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import axiosInstance from "@/app/lib/axiosInstance";
@@ -12,7 +12,7 @@ interface WeeklyKcalItem {
 }
 
 interface DietRecord {
-    date: string; // YYYY-MM-DD
+    date: string;
     calorie: number;
 }
 
@@ -20,6 +20,7 @@ const Dashboard_HealthReport = () => {
     const router = useRouter();
     const [weeklyKcal, setWeeklyKcal] = useState<WeeklyKcalItem[]>([]);
     const [feedbackText, setFeedbackText] = useState<string>("");
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchDietRecords = async () => {
@@ -98,17 +99,16 @@ const Dashboard_HealthReport = () => {
         <section className="w-full px-4 pt-4 flex flex-col items-center">
             <Box
                 sx={{
-                    width: "312px",
-                    height: "248px",
+                    width: 312,
+                    minHeight: 248,
                     border: "1px solid #C8C4E9",
                     borderRadius: "16px",
                     backgroundColor: "#fff",
                     px: 2,
                     py: 3,
-                    boxSizing: "border-box",
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "space-between",
+                    gap: 2,
                 }}
             >
                 <Typography
@@ -183,17 +183,78 @@ const Dashboard_HealthReport = () => {
                     })}
                 </Box>
 
-                <Typography
+                {/* ✅ 피드백 카드: 아코디언형 */}
+                <Box
                     sx={{
-                        fontSize: "13px",
-                        fontWeight: 700,
-                        color: "#2F3033",
-                        textAlign: "center",
-                        mt: 1,
+                        width: "100%",
+                        backgroundColor: "#fff",
+                        border: "1px solid #E8E6FF",
+                        borderRadius: "12px",
+                        p: 2,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                        cursor: "pointer",
                     }}
+                    onClick={() => setOpen(prev => !prev)}
                 >
-                    {feedbackText}
-                </Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 4,
+                                    height: 16,
+                                    backgroundColor: "#15B493",
+                                    borderRadius: 2,
+                                }}
+                            />
+                            <Typography
+                                sx={{
+                                    fontSize: 12,
+                                    fontWeight: 700,
+                                    color: "#2F3033",
+                                }}
+                            >
+                                AI 건강 피드백
+                            </Typography>
+                        </Box>
+
+                        <Typography
+                            sx={{
+                                fontSize: 12,
+                                color: "#7C69EF",
+                                fontWeight: 500,
+                            }}
+                        >
+                            {open ? "접기 ▲" : "더보기 ▼"}
+                        </Typography>
+                    </Box>
+
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Typography
+                            sx={{
+                                fontSize: 13,
+                                fontWeight: 500,
+                                color: "#2F3033",
+                                lineHeight: 1.5,
+                                mt: 1.5,
+                                whiteSpace: "pre-wrap",
+                            }}
+                        >
+                            {feedbackText}
+                        </Typography>
+                    </Collapse>
+                </Box>
             </Box>
 
             <Box sx={{ width: "312px", textAlign: "right", mt: "4px" }}>

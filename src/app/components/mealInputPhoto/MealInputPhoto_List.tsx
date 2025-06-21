@@ -1,28 +1,27 @@
-// components/record/meal/input/photo/MealInputPhoto_List.tsx
 "use client";
 
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useMealRecordStore } from "@/app/store/useMealRecordStore";
 import MealInputPhoto_ItemCard from "./MealInputPhoto_ItemCard";
 
-const MealInputPhoto_List = () => {
-    const photoFoodList = useMealRecordStore(state => state.photoFoodList);
+export default function MealInputPhoto_List() {
+    const list = useMealRecordStore(s => s.photoFoodList);
+
+    if (list.length === 0) {
+        return (
+            <Box sx={{ textAlign: "center", mt: 4 }}>
+                <Typography sx={{ fontSize: 14, color: "#909094" }}>
+                    음식 인식 중입니다...
+                </Typography>
+            </Box>
+        );
+    }
 
     return (
         <Box sx={{ px: 2, pt: 2 }}>
-            {photoFoodList.map((item, idx) => (
-                <MealInputPhoto_ItemCard
-                    key={idx}
-                    name={item.name}
-                    weight={item.weight}
-                    calorie={item.calorie}
-                    carbs={item.carbs}
-                    protein={item.protein}
-                    fat={item.fat}
-                />
+            {list.map((f, i) => (
+                <MealInputPhoto_ItemCard key={i} {...f} />
             ))}
         </Box>
     );
-};
-
-export default MealInputPhoto_List;
+}

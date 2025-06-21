@@ -10,7 +10,28 @@ const MEAL_ORDER: MealTime[] = ["아침", "점심", "저녁", "간식"];
 
 const HistoryMeal_FoodList = () => {
     const { historyList, selectedDate } = useMealHistoryStore();
+
     const todayData = historyList.find(item => item.date === selectedDate);
+
+    // ❗ todayData 또는 meals가 없을 때 early return
+    if (!todayData || !Array.isArray(todayData.meals)) {
+        return (
+            <Box sx={{ px: 2, pb: 4 }}>
+                <Typography
+                    fontSize={16}
+                    fontWeight={600}
+                    mt={2}
+                    mb={2}
+                    textAlign="center"
+                >
+                    &lt;오늘의 영양소 섭취&gt;
+                </Typography>
+                <Typography textAlign="center" color="gray">
+                    기록된 식단 정보가 없습니다.
+                </Typography>
+            </Box>
+        );
+    }
 
     return (
         <Box sx={{ px: 2, pb: 4 }}>
@@ -25,9 +46,14 @@ const HistoryMeal_FoodList = () => {
             </Typography>
 
             {MEAL_ORDER.map(mealTime => {
-                const meal = todayData?.meals.find(m => m.time === mealTime);
+                const meal = todayData.meals.find(m => m.time === mealTime);
 
-                if (!meal || meal.foods.length === 0) return null;
+                if (
+                    !meal ||
+                    !Array.isArray(meal.foods) ||
+                    meal.foods.length === 0
+                )
+                    return null;
 
                 return (
                     <Box key={mealTime} sx={{ mb: 3 }}>
