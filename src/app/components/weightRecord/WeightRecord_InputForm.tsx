@@ -1,4 +1,3 @@
-// WeightRecord_InputForm.tsx
 "use client";
 
 import {
@@ -15,69 +14,78 @@ import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "@/app/lib/axiosInstance";
 
 const WeightRecord_InputForm = () => {
-    const selectedDate = useWeightStore(state => state.selectedDate);
-    const weightByDate = useWeightStore(state => state.weightByDate);
-    const setWeight = useWeightStore(state => state.setWeight);
-    const setIsEditing = useWeightStore(state => state.setIsEditing);
-    const setCenterDate = useWeightStore(state => state.setCenterDate);
+    /* ---------- Zustand 상태 ---------- */
+    const selectedDate = useWeightStore(s => s.selectedDate);
+    const weightByDate = useWeightStore(s => s.weightByDate); // { [date]: { id, weight } }
+    const setWeight = useWeightStore(s => s.setWeight);
+    const setIsEditing = useWeightStore(s => s.setIsEditing);
+    const setCenterDate = useWeightStore(s => s.setCenterDate);
 
+    /* ---------- 현재 날짜/기본 값 ---------- */
     const dateKey = selectedDate.format("YYYY-MM-DD");
-    const defaultValue = useMemo(
-        () => weightByDate[dateKey],
-        [dateKey, weightByDate]
-    );
 
-    const [weight, setInput] = useState(defaultValue?.toString() || "");
+    // 👉 weight 객체에서 숫자만 뽑아옴
+    const defaultEntry = useMemo(
+        () => weightByDate[dateKey],
+        [weightByDate, dateKey]
+    );
+    const defaultWeight = defaultEntry?.weight; // 숫자 | undefined
+    const defaultId = defaultEntry?.id; // 숫자 | undefined
+
+    /* ---------- 로컬 상태 ---------- */
+    const [weight, setInput] = useState(defaultWeight?.toString() ?? "");
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
+    /* 날짜 바뀔 때 입력창 값 초기화 */
     useEffect(() => {
-        setInput(defaultValue?.toString() || "");
-    }, [defaultValue, selectedDate]);
+        setInput(defaultWeight?.toString() ?? "");
+    }, [defaultWeight, selectedDate]);
 
+    /* ---------- 저장/수정 ---------- */
     const handleSave = async () => {
         const numeric = parseFloat(weight);
-        if (isNaN(numeric)) return;
+        if (isNaN(numeric)) return; // 숫자 입력이 아닐 때 무시
 
         try {
-            if (defaultValue) {
-                // 🔁 수정 (PATCH)
+            if (defaultEntry) {
+                /* PATCH (수정) */
                 await axiosInstance.patch("/api/core/users/weight", {
-                    id: defaultValue.id,
+                    id: defaultId,
                     weight: numeric,
                 });
-
-                // ✅ 상태 업데이트
-                setWeight(selectedDate, numeric, defaultValue.id);
+                setWeight(selectedDate, numeric, defaultId); // Zustand 갱신
             } else {
-                // 🆕 새로 기록 (POST)
+                /* POST (신규) */
                 const res = await axiosInstance.post("/api/core/users/weight", {
                     weight: numeric,
-                    date: selectedDate.format("YYYY-MM-DD"),
+                    date: dateKey,
                 });
-
-                const newId = res.data.data?.id ?? Date.now(); // 안전하게 id 가져오기
-                setWeight(selectedDate, numeric, newId);
+                const newId = res.data.data?.id ?? Date.now();
+                setWeight(selectedDate, numeric, newId); // Zustand 갱신
             }
 
             setCenterDate(selectedDate);
             setOpenSnackbar(true);
             setTimeout(() => setIsEditing(false), 500);
-        } catch (error) {
-            console.error("체중 기록 저장 실패:", error);
+        } catch (err) {
+            console.error("체중 기록 저장 실패:", err);
         }
     };
 
+    /* ---------- 렌더 ---------- */
     return (
         <Box px={3} py={2}>
             <Typography fontWeight={600} mb={1.5}>
                 {selectedDate.format("YYYY년 M월 D일")} 체중을 기록해주세요
             </Typography>
+
+            {/* 입력창 */}
             <OutlinedInput
                 fullWidth
                 value={weight}
                 onChange={e => {
                     const val = e.target.value.trim();
-                    if (/^\d*\.?\d*$/.test(val)) setInput(val);
+                    if (/^\d*\.?\d*$/.test(val)) setInput(val); // 숫자·소수점만 허용
                 }}
                 startAdornment={
                     <InputAdornment position="start">
@@ -97,6 +105,8 @@ const WeightRecord_InputForm = () => {
                     },
                 }}
             />
+
+            {/* 저장 / 수정 버튼 */}
             {weight && (
                 <Button
                     fullWidth
@@ -112,9 +122,11 @@ const WeightRecord_InputForm = () => {
                         ":hover": { backgroundColor: "#00A982" },
                     }}
                 >
-                    {defaultValue ? "수정하기" : "기록하기"}
+                    {defaultEntry ? "수정하기" : "기록하기"}
                 </Button>
             )}
+
+            {/* 저장 완료 알림 */}
             <Snackbar
                 open={openSnackbar}
                 autoHideDuration={2000}
