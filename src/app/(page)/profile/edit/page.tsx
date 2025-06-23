@@ -11,55 +11,58 @@ import ProfileSetupSubmit from "@/app/components/profileSetup/Profile_Setup_Subm
 import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
 
 const EditProfilePage = () => {
-    const nickname = useProfileSetupStore(state => state.nickname);
-    const gender = useProfileSetupStore(state => state.gender);
-    const age = useProfileSetupStore(state => state.age);
-    const height = useProfileSetupStore(state => state.height);
-    const weight = useProfileSetupStore(state => state.weight);
-    const purpose = useProfileSetupStore(state => state.purpose);
-    const diseases = useProfileSetupStore(state => state.diseases);
+  // 🔍 Zustand 상태 불러오기
+  const nickname = useProfileSetupStore(state => state.nickname);
+  const gender = useProfileSetupStore(state => state.gender);
+  const age = useProfileSetupStore(state => state.age);
+  const height = useProfileSetupStore(state => state.height);
+  const weight = useProfileSetupStore(state => state.weight);
+  const purpose = useProfileSetupStore(state => state.purpose);
+  const diseases = useProfileSetupStore(state => state.diseases);
 
-    const allInputsFilled =
-        !!nickname.trim() &&
-        !!gender &&
-        !!age.trim() &&
-        !!height.trim() &&
-        !!weight.trim() &&
-        !!purpose;
+  // ✅ 안전한 입력값 체크
+  const allInputsFilled =
+    typeof nickname === "string" && nickname.trim() !== "" &&
+    typeof gender === "string" &&
+    typeof age === "string" && age.trim() !== "" &&
+    typeof height === "string" && height.trim() !== "" &&
+    typeof weight === "string" && weight.trim() !== "" &&
+    typeof purpose === "string";
 
-    const handleSubmit = () => {
-        console.log("✅ 수정된 프로필:", {
-            nickname,
-            gender,
-            age,
-            height,
-            weight,
-            purpose,
-            diseases,
-        });
-        // submit은 ProfileSetupSubmit 안에서 axios 요청함
-    };
+  // ✅ 제출 핸들러
+  const handleSubmit = () => {
+    console.log("✅ 수정된 프로필:", {
+      nickname,
+      gender,
+      age,
+      height,
+      weight,
+      purpose,
+      diseases,
+    });
+    // ProfileSetupSubmit 내부에서 axios 요청 처리함
+  };
 
-    return (
-        <div>
-            <ProfileSetupHeader />
-            <Profile_Setup_Profile />
+  return (
+    <div>
+      <ProfileSetupHeader />
+      <Profile_Setup_Profile />
 
-            <div className="flex flex-col gap-8">
-                <ProfileSetupGender />
-                <ProfileSetupBodyInfo />
-                <ProfileSetupPurpose />
-                <ProfileSetupDisease />
+      <div className="flex flex-col gap-8">
+        <ProfileSetupGender />
+        <ProfileSetupBodyInfo />
+        <ProfileSetupPurpose />
+        <ProfileSetupDisease />
 
-                <ProfileSetupSubmit
-                    isValid={allInputsFilled}
-                    buttonText="수정 완료"
-                    redirectTo="/mypage"
-                    onSubmit={handleSubmit}
-                />
-            </div>
-        </div>
-    );
+        <ProfileSetupSubmit
+          isValid={allInputsFilled}
+          buttonText="수정 완료"
+          redirectTo="/mypage"
+          onSubmit={handleSubmit}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default EditProfilePage;
