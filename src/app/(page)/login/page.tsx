@@ -9,6 +9,7 @@ const page = () => {
     // };
     const naverLoginUrl = "/oauth2/authorization/naver";
     const handleNaverLogin = () => {
+        localStorage.removeItem("accessToken");
         window.location.href = "https://api.eatfit.site" + naverLoginUrl;
     };
 
@@ -19,6 +20,7 @@ const page = () => {
     // };
     const kakaoLoginUrl = "/oauth2/authorization/kakao";
     const handleKakaoLogin = () => {
+        localStorage.removeItem("accessToken");
         window.location.href = "https://api.eatfit.site" + kakaoLoginUrl;
     };
 
