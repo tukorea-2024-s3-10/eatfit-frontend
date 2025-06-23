@@ -39,10 +39,10 @@ const NutritionPlan_TargetWeightEditor = () => {
 
             try {
                 // 🔄 PATCH API 요청
-                const res = await axiosInstance.post(
-                    "/api/core/users/goal-weight",
+                const res = await axiosInstance.patch(
+                    "/api/core/users/profile/target-weight",
                     {
-                        goalWeight: value,
+                        targetWeight: value,
                     }
                 );
                 console.log("✅ 목표 체중 수정 성공");

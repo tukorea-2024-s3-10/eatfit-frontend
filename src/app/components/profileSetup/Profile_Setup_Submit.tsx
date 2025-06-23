@@ -39,7 +39,7 @@ const ProfileSetupSubmit = ({
                     height: Number(height),
                     weight: Number(weight),
                     targetWeight: Number(weight), // 💡 필요 시 수정 가능
-                    goalCategory: purpose,
+                    goalType: purpose,
                     disease: diseases.join(","), // 배열 → 문자열 변환
                 }
             );
