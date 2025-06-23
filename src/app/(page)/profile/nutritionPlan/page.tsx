@@ -2,7 +2,7 @@ import React from "react";
 import ProfileSetupHeader from "@/app/components/profileSetup/Profile_Setup_Header";
 import NutritionPlan_RecommendedCalorie from "@/app/components/nutritionPlan/NutritionPlan_RecommendedCalorie";
 import NutritionPlan_CalorieEditor from "@/app/components/nutritionPlan/NutritionPlan_CalorieEditor";
-import NutritionPlan_TargetWeightEditor from "@/app/components/nutritionPlan/NutritionPlan_WeightEditor";
+import NutritionPlan_TargetWeightEditor from "@/app/components/nutritionPlan/NutritionPlan_TargetWeightEditor";
 import NutritionPlan_NutrientSummary from "@/app/components/nutritionPlan/NutritionPlan_NutrientSummary";
 import NutritionPlan_PersonalizedInfo from "@/app/components/nutritionPlan/NutritionPlan_PersonalizedInfo";
 import NutritionPlan_GoToManageButton from "@/app/components/nutritionPlan/NutritionPlan_GoToManageButton";
