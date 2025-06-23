@@ -13,50 +13,47 @@ import TabBar from "../common/TabBar";
 
 // ✅ 백엔드 응답 타입 명확히 지정
 interface ApiWeightRecord {
-    id: number;
-    weight: number;
-    date: string; // "YYYY-MM-DD"
+  id: number;
+  weight: number;
+  date: string; // "YYYY-MM-DD"
 }
 
 const WeightRecord_ChartView = () => {
-    const setWeightByDate = useWeightStore(state => state.setWeightByDate);
+  const setWeightByDate = useWeightStore((state) => state.setWeightByDate);
 
-    useEffect(() => {
-        const fetchWeights = async () => {
-            try {
-                const res = await axiosInstance.get("/api/core/users/weight");
-                const records: ApiWeightRecord[] = res.data.data;
+  useEffect(() => {
+    const fetchWeights = async () => {
+      try {
+        const res = await axiosInstance.get("/api/core/users/weight");
+        const records: ApiWeightRecord[] = res.data.data;
 
-                const formatted: Record<
-                    string,
-                    { id: number; weight: number }
-                > = {};
-                records.forEach(record => {
-                    formatted[record.date] = {
-                        id: record.id,
-                        weight: record.weight,
-                    };
-                });
+        const formatted: Record<string, { id: number; weight: number }> = {};
+        records.forEach((record) => {
+          formatted[record.date] = {
+            id: record.id,
+            weight: record.weight,
+          };
+        });
 
-                setWeightByDate(formatted);
-            } catch (err) {
-                console.error("❌ 체중 기록 불러오기 실패", err);
-            }
-        };
+        setWeightByDate(formatted);
+      } catch (err) {
+        console.error("❌ 체중 기록 불러오기 실패", err);
+      }
+    };
 
-        fetchWeights();
-    }, [setWeightByDate]);
+    fetchWeights();
+  }, [setWeightByDate]);
 
-    return (
-        <Box>
-            <WeightRecord_Header />
-            <WeightRecord_SummaryCard />
-            <WeightRecord_WeeklyChart_Header />
-            <WeightRecord_WeeklyChart />
-            <WeightRecord_GoHomeButton />
-            <TabBar />
-        </Box>
-    );
+  return (
+    <Box>
+      <WeightRecord_Header />
+      <WeightRecord_SummaryCard />
+      <WeightRecord_WeeklyChart_Header />
+      <WeightRecord_WeeklyChart />
+      <WeightRecord_GoHomeButton />
+      <TabBar />
+    </Box>
+  );
 };
 
 export default WeightRecord_ChartView;
