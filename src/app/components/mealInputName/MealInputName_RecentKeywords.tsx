@@ -4,78 +4,66 @@ import { Box, Chip, Typography } from "@mui/material";
 import { useMealNameSearchStore } from "@/app/store/useMealNameSearchStore";
 import axiosInstance from "@/app/lib/axiosInstance";
 
-// ✅ 여기서 바로 타입 정의
-interface FoodApiItem {
-    name: string;
-    mass: number;
-    calorie: number;
-    carbohydrate: number;
-    protein: number;
-    fat: number;
-}
-
 const MealInputName_RecentKeywords = () => {
-    const {
-        recentKeywords,
-        deleteRecentKeyword,
-        setSearchResults,
-        setKeyword,
-        setShowRecentKeywords,
-    } = useMealNameSearchStore();
+  const {
+    recentKeywords,
+    deleteRecentKeyword,
+    setSearchResults,
+    setKeyword,
+  } = useMealNameSearchStore();
 
-    const handleKeywordClick = (keyword: string) => {
-        setKeyword(keyword);
-        setShowRecentKeywords(false);
-    };
+  if (recentKeywords.length === 0) return null;
 
-    const handleClick = async (keyword: string) => {
-        handleKeywordClick(keyword);
+  const onClickChip = async (word: string) => {
+    setKeyword(word);
+    try {
+      const res = await axiosInstance.get(
+        `/api/core/food?name=${encodeURIComponent(word)}`
+      );
+      setSearchResults(res.data.data ?? []);
+    } catch (e) {
+      console.error("📛 최근 검색 재조회 실패:", e);
+    }
+  };
 
-        try {
-            const res = await axiosInstance.get(
-                `/api/core/food?name=${encodeURIComponent(keyword)}`
-            );
+  return (
+    <Box sx={{ px: 2, pt: 3 }}>
+      <Typography
+        fontWeight={600}
+        fontSize={14}
+        mb={1}
+        sx={{ color: "#2F3033" }}
+      >
+        최근 검색어
+      </Typography>
 
-            const converted = (res.data.data as FoodApiItem[]).map(item => ({
-                name: item.name,
-                weight: `${item.mass}g`,
-                calorie: item.calorie,
-                carbs: item.carbohydrate,
-                protein: item.protein,
-                fat: item.fat,
-            }));
-
-            setSearchResults(converted);
-        } catch (e) {
-            console.error("📛 최근 검색 재요청 실패", e);
-        }
-    };
-
-    if (recentKeywords.length === 0) return null;
-
-    return (
-        <Box sx={{ px: 2, pt: 2 }}>
-            <Typography fontWeight={600} fontSize={14} mb={1}>
-                최근 검색어
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {recentKeywords.map((keyword, idx) => (
-                    <Chip
-                        key={idx}
-                        label={keyword}
-                        onClick={() => handleClick(keyword)}
-                        onDelete={() => deleteRecentKeyword(keyword)}
-                        sx={{
-                            backgroundColor: "#F5F5FD",
-                            color: "#2F3033",
-                            fontSize: 13,
-                            borderRadius: "999px",
-                        }}
-                    />
-                ))}
-            </Box>
-        </Box>
-    );
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+        {recentKeywords.map((kw) => (
+          <Chip
+            key={kw}
+            label={kw}
+            onClick={() => onClickChip(kw)}
+            onDelete={() => deleteRecentKeyword(kw)}
+            sx={{
+              borderRadius: "999px",
+              backgroundColor: "#E0F7F3",
+              fontSize: 13,
+              color: "#2F3033",
+              "&:hover": {
+                backgroundColor: "#D1F2EC",
+              },
+              "& .MuiChip-deleteIcon": {
+                color: "#909094",
+                "&:hover": {
+                  color: "#6D6D6D",
+                },
+              },
+            }}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
 };
 
 export default MealInputName_RecentKeywords;
