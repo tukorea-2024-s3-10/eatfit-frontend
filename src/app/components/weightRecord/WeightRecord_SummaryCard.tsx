@@ -14,7 +14,9 @@ const WeightRecord_SummaryCard = () => {
   useEffect(() => {
     const fetchTargetWeight = async () => {
       try {
-        const res = await axiosInstance.get("/api/users/me/goal");
+        const res = await axiosInstance.get(
+          "/api/core/users/profile/target-weight"
+        );
         const data = res.data.data;
         setTargetWeight(data.targetWeight);
       } catch (err) {
