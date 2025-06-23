@@ -33,7 +33,7 @@ const ProfileSetupSubmit = ({
             const response = await axiosInstance.post(
                 "/api/core/users/profile",
                 {
-                    name: nickname,
+                    nickname,
                     gender,
                     birthYear: new Date().getFullYear() - Number(age), // age → birthYear 계산
                     height: Number(height),
