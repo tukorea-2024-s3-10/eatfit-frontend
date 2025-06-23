@@ -35,7 +35,7 @@ const ProfileSetupSubmit = ({
                 {
                     nickname,
                     gender,
-                    birthYear: new Date().getFullYear() - Number(age), // age → birthYear 계산
+                    age,
                     height: Number(height),
                     weight: Number(weight),
                     targetWeight: Number(weight), // 💡 필요 시 수정 가능
