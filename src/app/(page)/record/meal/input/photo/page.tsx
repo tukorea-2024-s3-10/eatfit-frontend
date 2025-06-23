@@ -24,7 +24,7 @@ export default function Page() {
                 formData.append("file", blob, "food.jpg");
 
                 /* ---------- 2. 모델 서버로 분류 요청 ---------- */
-                const res = await fetch("http://3.39.238.237:8000/predict", {
+                const res = await fetch("https://api.eatfit.site/api/ai/predict", {
                     method: "POST",
                     body: formData,
                 });
