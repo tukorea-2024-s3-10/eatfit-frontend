@@ -39,10 +39,8 @@ const MealInputName_Header = () => {
         { label: "식단 기록하기", path: "/record/meal" },
         { label: "체중 기록하기", path: "/record/weight" },
         { label: "식단 기록", path: "/history/meal" },
-        { label: "체중 기록", path: "/history/weight" },
+        { label: "체중 기록", path: "/record/weight" },
         { label: "건강 리포트", path: "/report" },
-        { label: "영양제 & 식단 추천", path: "/recommend" },
-        { label: "저녁 추천", path: "/recommend/dinner" },
         { label: "마이페이지", path: "/mypage" },
     ];
 

@@ -1,57 +1,57 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
 import axiosInstance from "@/app/lib/axiosInstance";
 
-const NutritionPlan_NutrientSummary = () => {
-  /* ───────────────── 상태 구독 ───────────────── */
-  const { carbs, protein, fat, setMacros } = useNutritionPlanStore((state) => ({
-    carbs: state.carbs,
-    protein: state.protein,
-    fat: state.fat,
-    setMacros: state.setMacros,
-  }));
+interface IntakeGoalData {
+  calorieGoal: number;
+  sodiumGoal: number;
+  carbohydrateGoal: number;
+  sugarGoal: number;
+  fatGoal: number;
+  transFatGoal: number;
+  saturatedFatGoal: number;
+  cholesterolGoal: number;
+  proteinGoal: number;
+}
 
-  /* ───────────────── API 호출 (탄·단·지) ───────────────── */
+const NutritionPlan_NutrientSummary = () => {
+  const [carbs, setCarbs] = useState<number>(0);
+  const [protein, setProtein] = useState<number>(0);
+  const [fat, setFat] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    const fetchMacros = async () => {
+    const fetchIntakeGoal = async () => {
       try {
         const res = await axiosInstance.get("/api/core/users/intake-goal");
-        const data = res.data?.data;
-
-        /*  API 예시
-            {
-              calorieGoal: 2200,
-              carbohydrateGoal: 275,
-              proteinGoal: 165,
-              fatGoal: 49,
-              ...
-            }
-        */
+        const data: IntakeGoalData | undefined = res.data?.data;
 
         if (data) {
-          setMacros({
-            carbs: data.carbohydrateGoal,
-            protein: data.proteinGoal,
-            fat: data.fatGoal,
-          });
+          setCarbs(data.carbohydrateGoal ?? 0);
+          setProtein(data.proteinGoal ?? 0);
+          setFat(data.fatGoal ?? 0);
         }
-      } catch (e) {
-        console.error("❌ 탄·단·지 불러오기 실패:", e);
+      } catch (error) {
+        console.error("❌ 목표 섭취량 불러오기 실패:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchMacros();
-  }, [setMacros]);
+    fetchIntakeGoal();
+  }, []);
 
-  /* ───────────────── UI ───────────────── */
+  if (loading) {
+    return <Typography sx={{ textAlign: "center", mt: 4 }}>로딩 중...</Typography>;
+  }
+
   return (
     <section className="w-full px-4 pt-4 flex justify-center">
       <Box
         sx={{
-          width: 312,
+          width: "312px",
           border: "1px solid #C8C4E9",
           borderRadius: "16px",
           backgroundColor: "#fff",
@@ -61,7 +61,9 @@ const NutritionPlan_NutrientSummary = () => {
           mb: 2,
         }}
       >
-        <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 3, color: "#2F3033" }}>
+        <Typography
+          sx={{ fontSize: "14px", fontWeight: 600, mb: 3, color: "#2F3033" }}
+        >
           하루 영양소는 이렇게 추천해요!
         </Typography>
 
@@ -72,23 +74,24 @@ const NutritionPlan_NutrientSummary = () => {
             { label: "지방", value: fat },
           ].map(({ label, value }) => (
             <Box key={label} sx={{ textAlign: "center", flex: 1 }}>
-              {/* 수치 */}
-              <Typography sx={{ fontSize: 20, fontWeight: 700, color: "#7C69EF" }}>
+              <Typography
+                sx={{ fontSize: "20px", fontWeight: 700, color: "#7C69EF" }}
+              >
                 {value}
               </Typography>
               <Typography
                 sx={{
-                  fontSize: 14,
+                  fontSize: "14px",
                   fontWeight: 500,
                   color: "#7C69EF",
-                  ml: 0.5,
+                  ml: "2px",
                 }}
               >
                 g
               </Typography>
-
-              {/* 라벨 */}
-              <Typography sx={{ fontSize: 12, color: "#2F3033", mt: 0.5 }}>
+              <Typography
+                sx={{ fontSize: "12px", color: "#2F3033", mt: 0.5 }}
+              >
                 {label}
               </Typography>
             </Box>
@@ -100,4 +103,3 @@ const NutritionPlan_NutrientSummary = () => {
 };
 
 export default NutritionPlan_NutrientSummary;
-// 수정
