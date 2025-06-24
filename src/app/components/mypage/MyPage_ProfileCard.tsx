@@ -26,7 +26,7 @@ const MyPage_ProfileCard = () => {
 
   const resolvedProfileImage = profileImage?.trim()
     ? profileImage
-    : "/default-profile.png"; // 기본 프로필 이미지 처리
+    : "/default-profile.svg"; // 기본 프로필 이미지 처리
 
   const purposeImage = purpose
     ? purposeImageMap[purpose] || purposeImageMap["유지"]

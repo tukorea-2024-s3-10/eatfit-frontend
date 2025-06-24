@@ -16,12 +16,17 @@ interface IntakeGoalData {
   proteinGoal: number;
 }
 
-const NutritionPlan_NutrientSummary = () => {
+interface Props {
+  refreshTrigger: number; // ✅ 외부에서 상태 변화로 재호출 트리거
+}
+
+const NutritionPlan_NutrientSummary = ({ refreshTrigger }: Props) => {
   const [carbs, setCarbs] = useState<number>(0);
   const [protein, setProtein] = useState<number>(0);
   const [fat, setFat] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // ✅ API 호출 - refreshTrigger가 바뀔 때마다 재요청
   useEffect(() => {
     const fetchIntakeGoal = async () => {
       try {
@@ -40,8 +45,9 @@ const NutritionPlan_NutrientSummary = () => {
       }
     };
 
+    setLoading(true); // 로딩 초기화
     fetchIntakeGoal();
-  }, []);
+  }, [refreshTrigger]);
 
   if (loading) {
     return <Typography sx={{ textAlign: "center", mt: 4 }}>로딩 중...</Typography>;
@@ -74,21 +80,28 @@ const NutritionPlan_NutrientSummary = () => {
             { label: "지방", value: fat },
           ].map(({ label, value }) => (
             <Box key={label} sx={{ textAlign: "center", flex: 1 }}>
-              <Typography
-                sx={{ fontSize: "20px", fontWeight: 700, color: "#7C69EF" }}
-              >
-                {value}
-              </Typography>
-              <Typography
+              {/* 숫자와 단위 g 나란히 */}
+              <Box
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  color: "#7C69EF",
-                  ml: "2px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "baseline",
+                  gap: "4px",
                 }}
               >
-                g
-              </Typography>
+                <Typography
+                  sx={{ fontSize: "20px", fontWeight: 700, color: "#7C69EF" }}
+                >
+                  {value}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: "14px", fontWeight: 500, color: "#7C69EF" }}
+                >
+                  g
+                </Typography>
+              </Box>
+
+              {/* 영양소 이름 */}
               <Typography
                 sx={{ fontSize: "12px", color: "#2F3033", mt: 0.5 }}
               >

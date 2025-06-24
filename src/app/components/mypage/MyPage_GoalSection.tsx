@@ -62,8 +62,7 @@ const MyPage_GoalSection = () => {
       if (openType === "calorie") {
         setTargetCalorie(parsed);
 
-        const res = await axiosInstance.get("/api/core/users/intake-goal");
-
+        await axiosInstance.get("/api/core/users/intake-goal");
         await axiosInstance.patch(
           "https://api.eatfit.site/api/core/users/intake-goal",
           {

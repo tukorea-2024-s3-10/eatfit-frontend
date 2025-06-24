@@ -22,7 +22,7 @@ interface ProfileSetupSubmitProps {
 const ProfileSetupSubmit = ({
   isValid,
   buttonText = "설정하기",
-  redirectTo = "/mypage",
+  redirectTo = "/profile/nutritionPlan",
   onSubmit,
 }: ProfileSetupSubmitProps) => {
   const router = useRouter();
