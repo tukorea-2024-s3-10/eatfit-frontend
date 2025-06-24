@@ -38,7 +38,7 @@ interface RawDietRecord {
     foodName: string;
     mass: number;
     calorie: number;
-    carbs: number;
+    carbohydrate: number;
     protein: number;
     fat: number;
 }
@@ -91,7 +91,7 @@ const Page = () => {
                                 name: item.foodName,
                                 weight: `${item.mass}g`,
                                 calorie: item.calorie,
-                                carbs: item.carbs,
+                                carbs: item.carbohydrate,
                                 protein: item.protein,
                                 fat: item.fat,
                             });
