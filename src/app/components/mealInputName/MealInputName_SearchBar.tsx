@@ -6,6 +6,7 @@ import axiosInstance from "@/app/lib/axiosInstance";
 import { useMealNameSearchStore } from "@/app/store/useMealNameSearchStore";
 import { debounce } from "lodash";
 import type { FoodInfo } from "@/app/store/useMealNameSearchStore";
+import type { AutocompleteProps } from "@mui/material/Autocomplete";
 
 const MealInputName_SearchBar = () => {
   const [inputValue, setInputValue] = useState("");
@@ -18,27 +19,30 @@ const MealInputName_SearchBar = () => {
     searchResults,
   } = useMealNameSearchStore();
 
-  /* ───────── 음식 선택 ───────── */
+  // ✅ 음식 선택 처리
   const handleFoodSelect = (food: FoodInfo) => {
     setSelectedFood(food);
     setKeyword(food.name);
     addRecentKeyword(food.name);
   };
 
-  /* ───────── API 호출 ───────── */
-  const fetchFoods = useCallback(async (kw: string) => {
-    try {
-      const res = await axiosInstance.get(
-        `/api/core/food?name=${encodeURIComponent(kw)}`
-      );
-      setSearchResults(res.data.data ?? []);
-    } catch (e) {
-      console.error("음식 검색 실패:", e);
-      setSearchResults([]);
-    }
-  }, [setSearchResults]);
+  // ✅ 음식 검색 API 호출
+  const fetchFoods = useCallback(
+    async (kw: string) => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/core/food?name=${encodeURIComponent(kw)}`
+        );
+        setSearchResults(res.data.data ?? []);
+      } catch (e) {
+        console.error("음식 검색 실패:", e);
+        setSearchResults([]);
+      }
+    },
+    [setSearchResults]
+  );
 
-  /* ───────── 디바운스 ───────── */
+  // ✅ 디바운스 적용
   const debouncedFetch = useCallback(debounce(fetchFoods, 300), [fetchFoods]);
 
   useEffect(() => {
@@ -50,10 +54,14 @@ const MealInputName_SearchBar = () => {
     return () => debouncedFetch.cancel();
   }, [inputValue, debouncedFetch, setSearchResults]);
 
-  /* ───────── UI ───────── */
+  // ✅ MUI Autocomplete에 타입 명시
+  const AutocompleteComponent = Autocomplete as React.ComponentType<
+    AutocompleteProps<FoodInfo, false, false, true>
+  >;
+
   return (
     <Box sx={{ width: "100%", px: 2, pt: 3 }}>
-      <Autocomplete<FoodInfo, false, false, true>
+      <AutocompleteComponent
         freeSolo
         options={searchResults}
         isOptionEqualToValue={(o, v) => o.name === v.name}
@@ -62,7 +70,7 @@ const MealInputName_SearchBar = () => {
         onChange={(_, v) => {
           if (v && typeof v !== "string") handleFoodSelect(v);
         }}
-        filterOptions={(x) => x}
+        filterOptions={(x) => x} // 기본 필터 비활성화
         renderInput={(params) => (
           <TextField
             {...params}
@@ -100,10 +108,10 @@ const MealInputName_SearchBar = () => {
             fontWeight: 500,
             color: "#2F3033",
             "&[aria-selected='true']": {
-              backgroundColor: "#E0F7F3", // 선택된 항목 초록빛
+              backgroundColor: "#E0F7F3",
             },
             "&:hover": {
-              backgroundColor: "#D1F2EC", // hover도 초록 계열
+              backgroundColor: "#D1F2EC",
             },
           },
           "& .MuiAutocomplete-paper": {
