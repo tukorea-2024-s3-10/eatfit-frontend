@@ -43,6 +43,8 @@ instance.interceptors.request.use(
                         "❌ accessToken 재발급 실패 (요청 인터셉터)",
                         error
                     );
+                    localStorage.removeItem("accessToken");
+                    window.location.href = "/login";  // 여기에 로그인 페이지 이동 추가
                     throw error;
                 }
             }
@@ -91,7 +93,7 @@ instance.interceptors.response.use(
                     originalRequest.headers = {
                         ...originalRequest.headers,
                         Authorization: `Bearer ${newToken}`,
-                    };                                                                                                                                                                                                                                
+                    };
 
                     return instance(originalRequest);
                 } else {
