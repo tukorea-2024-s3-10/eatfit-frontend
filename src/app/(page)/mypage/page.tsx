@@ -16,7 +16,7 @@ const MyPage = () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
 
-        const res = await axiosInstance.get("/api/core/users/profile", {
+        const res = await axiosInstance.get("/api/users/me/profile", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
