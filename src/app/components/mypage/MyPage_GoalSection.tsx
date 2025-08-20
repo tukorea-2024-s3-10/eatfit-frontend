@@ -11,33 +11,17 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { useNutritionPlanStore } from "@/app/store/useNutritionPlanStore";
-import { useEffect, useState } from "react";
+import { useProfileSetupStore } from "@/app/store/useProfileSetupStore";
+import { useState } from "react";
 import axiosInstance from "@/app/lib/axiosInstance";
 
 const MyPage_GoalSection = () => {
-  const [targetWeight, setTargetWeight] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchTargetWeight = async () => {
-      try {
-        const res = await axiosInstance.get(
-          "/api/core/users/profile/target-weight"
-        );
-        const data = res.data.data;
-        setTargetWeight(data.targetWeight); // 또는 data.goalWeight 등
-      } catch (err) {
-        console.error("목표 몸무게 조회 오류", err);
-      }
-    };
-
-    fetchTargetWeight();
-  }, []);
+  // ✅ 전역 스토어에서 가져오기
+  const targetWeight = useProfileSetupStore((state) => state.targetWeight);
+  const setTargetWeight = useProfileSetupStore((state) => state.setTargetWeight);
 
   const targetCalorie = useNutritionPlanStore((state) => state.targetCalorie);
-
-  const setTargetCalorie = useNutritionPlanStore(
-    (state) => state.setTargetCalorie
-  );
+  const setTargetCalorie = useNutritionPlanStore((state) => state.setTargetCalorie);
 
   const [openType, setOpenType] = useState<"calorie" | "weight" | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -62,34 +46,26 @@ const MyPage_GoalSection = () => {
       if (openType === "calorie") {
         setTargetCalorie(parsed);
 
-        await axiosInstance.get("/api/core/users/intake-goal");
-        await axiosInstance.patch(
-          "https://api.eatfit.site/api/core/users/intake-goal",
-          {
-            calorieGoal: parsed,
-            proteinGoal: 90,
-            fatGoal: 60,
-            carbohydrateGoal: 210,
-            sodiumGoal: 2300,
-            sugarGoal: 30,
-            transFatGoal: 2,
-            saturatedFatGoal: 15,
-            cholesterolGoal: 300,
-          }
-        );
+        await axiosInstance.patch("/api/core/users/intake-goal", {
+          calorieGoal: parsed,
+          proteinGoal: 90,
+          fatGoal: 60,
+          carbohydrateGoal: 210,
+          sodiumGoal: 2300,
+          sugarGoal: 30,
+          transFatGoal: 2,
+          saturatedFatGoal: 15,
+          cholesterolGoal: 300,
+        });
 
         console.log("✅ 목표 칼로리 수정 완료");
       }
 
       if (openType === "weight") {
-        setTargetWeight(parsed);
-
-        await axiosInstance.patch(
-          "https://api.eatfit.site/api/core/users/profile/target-weight",
-          {
-            targetWeight: parsed,
-          }
-        );
+        setTargetWeight(parsed.toString()); // ✅ store 업데이트 (string으로 저장 중이므로)
+        await axiosInstance.patch("/api/core/users/profile/target-weight", {
+          targetWeight: parsed,
+        });
 
         console.log("✅ 목표 체중 수정 완료");
       }
@@ -105,12 +81,7 @@ const MyPage_GoalSection = () => {
   return (
     <Box px={3} py={2}>
       {/* 🔥 목표 칼로리 */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={1.5}
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1.5}>
         <Typography fontSize={14}>목표 칼로리</Typography>
         <Box display="flex" alignItems="center" gap={1}>
           <Typography fontSize={16} fontWeight={700} color="#00C092">
@@ -141,7 +112,7 @@ const MyPage_GoalSection = () => {
         <Typography fontSize={14}>목표 몸무게</Typography>
         <Box display="flex" alignItems="center" gap={1}>
           <Typography fontSize={16} fontWeight={700} color="#00C092">
-            {targetWeight.toFixed(1)} kg
+            {Number(targetWeight).toFixed(1)} kg
           </Typography>
           <Button
             variant="outlined"
