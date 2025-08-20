@@ -44,7 +44,7 @@ const MyPage_GoalSection = () => {
 
     try {
       if (openType === "calorie") {
-        setTargetCalorie(parsed);
+        setTargetWeight(parsed.toString());
 
         await axiosInstance.patch("/api/core/users/intake-goal", {
           calorieGoal: parsed,
