@@ -20,8 +20,8 @@ const MyPage_GoalSection = () => {
   const targetWeight = useProfileSetupStore((state) => state.targetWeight);
   const setTargetWeight = useProfileSetupStore((state) => state.setTargetWeight);
 
-  const targetCalorie = useNutritionPlanStore((state) => state.targetCalorie);
-  const setTargetCalorie = useNutritionPlanStore((state) => state.setTargetCalorie);
+  const targetCalorie = useProfileSetupStore((state) => state.targetCalorie);
+  const setTargetCalorie = useProfileSetupStore((state) => state.setTargetCalorie);
 
   const [openType, setOpenType] = useState<"calorie" | "weight" | null>(null);
   const [inputValue, setInputValue] = useState("");
