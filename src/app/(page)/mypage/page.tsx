@@ -31,6 +31,7 @@ const MyPage = () => {
           height,
           weight,
           goalCategory,
+          targetCalorie,
           targetWeight,
           disease,
         } = res.data.data;
@@ -43,6 +44,7 @@ const MyPage = () => {
         store.setAge(age);
         store.setHeight(height.toString());
         store.setWeight(weight.toString());
+        store.setTargetCalorie(targetCalorie.toString());
         store.setTargetWeight(targetWeight.toString());
         store.setPurpose(goalCategory);
         store.setDiseases(diseases);
